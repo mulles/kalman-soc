@@ -168,7 +168,7 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
         
         // Extract each integer
         while(ss >> val){
-            if (colIdx == 5) {
+            if (colIdx == 6) {
                 break;
             }
             // Add the current integer to the 'colIdx' column's values vector

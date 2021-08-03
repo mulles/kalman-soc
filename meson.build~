@@ -46,7 +46,7 @@ if (meson.is_subproject() != true)
 
     # Add CppUTest dependency
     cpputest = subproject('cpputest')
-    cpputest_dep = cpputest.get_variable('lcpp_dep')
+    cpputest_dep = cpputest.get_variable('cpputest_dep')
 
     # Build native unit tests
     run_tests = executable(
@@ -54,7 +54,7 @@ if (meson.is_subproject() != true)
         [ test_src_files, src_files, './tests/main.cpp' ],
         include_directories: [ test_src_inc ],
         dependencies: [ cpputest_dep ],
-        native: true,
+        native: true,	
         build_by_default: false
     )
 

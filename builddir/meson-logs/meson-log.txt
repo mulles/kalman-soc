@@ -1,0 +1,116 @@
+Build started at 2021-07-08T17:01:46.519096
+Main binary: /usr/bin/python3
+Build Options: 
+Python system: Linux
+The Meson build system
+Version: 0.56.2
+Source dir: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc
+Build dir: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir
+Build type: native build
+Project name: Kalman SoC
+Project version: 0.0.1
+None of 'CXX' are defined in the environment, not changing global flags.
+None of 'CXXFLAGS' are defined in the environment, not changing global flags.
+None of 'LDFLAGS' are defined in the environment, not changing global flags.
+None of 'CPPFLAGS' are defined in the environment, not changing global flags.
+None of 'CXX_LD' are defined in the environment, not changing global flags.
+Sanity testing C++ compiler: c++
+Is cross compiler: False.
+None of 'CXX_LD' are defined in the environment, not changing global flags.
+Sanity check compiler command line: c++ /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/sanitycheckcpp.cc -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/sanitycheckcpp.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/sanitycheckcpp.exe
+C++ compiler for the host machine: c++ (gcc 10.3.0 "c++ (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C++ linker for the host machine: c++ ld.bfd 2.36.1
+None of 'AR' are defined in the environment, not changing global flags.
+None of 'CXX' are defined in the environment, not changing global flags.
+None of 'CXXFLAGS' are defined in the environment, not changing global flags.
+None of 'LDFLAGS' are defined in the environment, not changing global flags.
+None of 'CPPFLAGS' are defined in the environment, not changing global flags.
+None of 'CXX_LD' are defined in the environment, not changing global flags.
+Sanity testing C++ compiler: c++
+Is cross compiler: False.
+None of 'CXX_LD' are defined in the environment, not changing global flags.
+Sanity check compiler command line: c++ /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/sanitycheckcpp.cc -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/sanitycheckcpp.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/sanitycheckcpp.exe
+C++ compiler for the build machine: c++ (gcc 10.3.0 "c++ (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C++ linker for the build machine: c++ ld.bfd 2.36.1
+None of 'AR' are defined in the environment, not changing global flags.
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+Program python3 found: YES (/usr/bin/python3)
+Program clang-format found: YES (/usr/bin/clang-format)
+WARNING: Tried to mix libraries for machines 0 and 1 in target 'backtest' This will fail in cross build.
+
+Executing subproject cpputest method meson 
+
+Project name: cpputest
+Project version: undefined
+C++ compiler for the host machine: c++ (gcc 10.3.0 "c++ (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C++ linker for the host machine: c++ ld.bfd 2.36.1
+C++ compiler for the build machine: c++ (gcc 10.3.0 "c++ (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C++ linker for the build machine: c++ ld.bfd 2.36.1
+Build targets in project: 4
+Subproject cpputest finished.
+
+WARNING: Tried to mix libraries for machines 0 and 1 in target 'run_tests' This will fail in cross build.
+WARNING: Tried to mix libraries for machines 0 and 1 in target 'run_tests' This will fail in cross build.
+Adding test "cpputest"
+Message: 
+
+Build commands:
+    ninja           compile
+    ninja clean     clean
+    ninja lint      prints a diff for files that do not match the style guide
+
+Build targets in project: 6
+
+Kalman SoC 0.0.1
+
+  Subprojects
+    cpputest: YES
+
+Found ninja-1.10.1 at /usr/bin/ninja
+Running compile:
+Working directory:  /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/tmppa0qhhla
+Command line:  c++ /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/tmppa0qhhla/testfile.cpp -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/tmppa0qhhla/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -fpermissive --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/10/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../lib/:/lib/x86_64-linux-gnu/10/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/10/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/tmpdomd9qa_
+Command line:  c++ /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/tmpdomd9qa_/testfile.cpp -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Software/kalman-soc/builddir/meson-private/tmpdomd9qa_/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -fpermissive --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/10/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../lib/:/lib/x86_64-linux-gnu/10/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/10/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+None of 'STRIP' are defined in the environment, not changing global flags.
+None of 'STRIP' are defined in the environment, not changing global flags.
