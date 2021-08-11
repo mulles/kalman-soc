@@ -141,7 +141,6 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
         while(std::getline(ss, colname, ',')){
 
             if (colname == std::string("timestamp")) {
-                printf("break out of while column name \n");
                 break;
             }
 
@@ -171,18 +170,15 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
         // Extract each integer
         while(ss >> val){
             if (colIdx == 5) {
-                printf(" break out of while getline");
                 break;
             }
             // Add the current integer to the 'colIdx' column's values vector
             result.at(colIdx).second.push_back(val);
-             printf("ColumnIndexwhile[\%i]=\%i",colIdx,result.at(colIdx).second.back());
             // If the next token is a comma, ignore it and move on
             if(ss.peek() == ',') ss.ignore();
             
             // Increment the column index
             colIdx++;
-            printf(" ColumnIndexwhile\%i",colIdx);
         }
         if (lineIdx == 0) {
             // use battery voltage to initialize kalman filter
@@ -190,7 +186,6 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
             kalman.init(isBattery12V, isBatteryLithium, batteryEff, batteryVoltage, initialSoC);
             uint32_t soc = kalman.read();
             result.at(colIdx).second.push_back(soc);
-            printf("ColumnIndexwhile[\%i]=\%i",colIdx,result.at(colIdx).second.back());
         } else {
             // use sensor data to do a sample with the kalman filter
             bool isBatteryInFloat = (result.at(2).second.back() == 3);
@@ -201,13 +196,8 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
             kalman.sample(isBatteryInFloat, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
             uint32_t soc = kalman.read();
             result.at(colIdx).second.push_back(soc);
-
-            printf("\nColumnIndex\%i",colIdx);
-            printf("ColumnIndexwhile[\%i]=\%i",colIdx,result.at(colIdx).second.back());
-
         }
         lineIdx++;
-        printf("\nLineIndex\%i",lineIdx);
     }
 
     // Close file
@@ -226,7 +216,7 @@ int main() {
     // Write to another file to check that this was successful
     write_csv(OUTPUT_FILEPATH, result);
 
-    printf("Finished writing. version 0.1\n");
+    printf("Finished writing.\n");
     
     return 0;
 }
