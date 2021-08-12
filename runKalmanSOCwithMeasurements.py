@@ -20,6 +20,8 @@ org ="LibreSolar"
 token ="environement-variable"
 url="https://influxdb.lsserver.uber.space"
 toMilli = 1000
+query_start = '2021-05-28T20:10:00.000Z'
+query_stop = '2021-05-29T02:19:00.000Z'
 
 
 
@@ -31,7 +33,7 @@ client = InfluxDBClient(
 # |> range(start: -97d, stop: -95d)
 query_api = client.query_api()
 query = 'from(bucket:"LabjackCurrentVoltage")\
-|> range(start: 2021-05-28T20:10:00.000Z, stop: 2021-05-29T02:19:00.000Z)\
+|> range(start:' + query_start + ', stop:' + query_stop + ')\
 |> filter(fn: (r) => r["_measurement"] == "V" or r["_measurement"] == "A" or r["_measurement"] == "Info")\
 |> filter(fn: (r) => r["_field"] == "Bat_V" or r["_field"] == "Bat_A" or r["_field"] == "ChgState" or r["_field"] == "SOC_pct")\
 |> filter(fn: (r) => r["device"] == "mppt-1210-hus")'
@@ -44,6 +46,7 @@ query = 'from(bucket:"LabjackCurrentVoltage")\
 
 df_query= client.query_api().query_data_frame(org=org, query=query)
 print(df_query)
+df_query.to_csv(os.getcwd()+'/data/nonstruct_raw_sensor_data_{query_start}_{query_stop}.csv',index=False)
 
 df_query = df_query.pivot(index = '_time',columns = '_field', values='_value').reset_index()
 print(df_query)
