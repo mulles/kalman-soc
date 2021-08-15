@@ -1,10 +1,10 @@
 # Editors
 .vscode/
+.vscode.backup/
 .idea/
 
-
-#Python
-*.py~
+#Gedit backup files
+*~
 
 # Environments
 .env
