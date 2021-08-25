@@ -1,8 +1,0 @@
-batteryMilliAmps,batteryMilliWatts,isBatteryInFloat,batteryVoltage,timestamp
-1200,10,3,12.4,0
-
-   int32_t batteryMilliAmps = result.at(0).second.back();
-   int32_t batteryMilliWatts = result.at(1).second.back()
-   bool isBatteryInFloat = (result.at(2).second.back() == 3);
-   uint32_t batteryVoltage = result.at(3).second.back();
-   uint32_t samplePeriodMilliSec = result.at(4).second.back();
