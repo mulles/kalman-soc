@@ -13,11 +13,13 @@ import subprocess
 import pandas as pd
 from influxdb_client import InfluxDBClient, Point, Dialect
 from influxdb_client .client.write_api import SYNCHRONOUS
+from dotenv import load_dotenv   #for python-dotenv method
+load_dotenv()                    #for python-dotenv method
 
 
 bucket ="LabjackCurrentVoltage"
 org ="LibreSolar"
-token ="environement-variable"
+token =  os.environ.get('Token')
 url="https://influxdb.lsserver.uber.space"
 toMilli = 1000
 query_start = '2021-05-28T20:10:00.000Z'

@@ -3,10 +3,12 @@
 .vscode.backup/
 .idea/
 
+
 #Gedit backup files
 *~
 
 # Environments
+build/
 .env
 .venv
 env/
