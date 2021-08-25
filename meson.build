@@ -46,16 +46,11 @@ if (meson.is_subproject() != true)
     test_src_files = get_variable('test_src_files')
 
     # Add CppUTest dependency
-<<<<<<< HEAD
-    cpputest = subproject('cpputest')
-    cpputest_dep = cpputest.get_variable('lcpp_dep')
-=======
     cpputest_opt = cmake.subproject_options()
     cpputest_opt.add_cmake_defines({'EXTENSIONS': true})
     cpputest = cmake.subproject('cpputest', options: cpputest_opt)
     cpputest_dep = cpputest.dependency('CppUTest')
     cpputestext_dep = cpputest.dependency('CppUTestExt')
->>>>>>> c9c8c2d9fc09f8652174b786026f0539c451ee4c
 
     # Build native unit tests
     run_tests = executable(
@@ -78,7 +73,6 @@ if (meson.is_subproject() != true)
 endif
 
 message('''
-
 Build commands:
     ninja           compile
     ninja clean     clean

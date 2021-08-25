@@ -1,4 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<testsuites tests="1" errors="0" failures="0"><testsuite name="Kalman SoC" tests="1" errors="0" failures="0" skipped="0"><testcase name="cpputest" classname="cpputest"><system-out>
-.........
-OK (9 tests, 9 ran, 9 checks, 0 ignored, 0 filtered out, 0 ms)</system-out></testcase></testsuite></testsuites>
