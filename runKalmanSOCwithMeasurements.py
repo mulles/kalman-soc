@@ -86,7 +86,7 @@ client.close()
 
 #from(bucket:"LabjackCurrentVoltage")
 # |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-# |> filter(fn: (r) => r["_measurement"] == "A" or r["_field"] == "Bat_A" or r["device"] == "mppt-1210-hus")
+# |> filter(fn: (r) => r["_measurement"] == "A" or r["_field"] == "Bat_A" or r["device"] == "mppt-1210-hus") 
 # |> filter(fn: (r) => r["_measurement"] == "V" or r["_field"] == "Bat_V" or r["device"] == "mppt-1210-hus")
 # |> drop(columns: ["_stop"])
 # |> drop(columns: ["_start"])

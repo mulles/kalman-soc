@@ -1,1 +1,0 @@
-[{"cmd": ["/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/run_tests"], "env": {}, "name": "cpputest", "workdir": null, "timeout": 30, "suite": ["Kalman_SoC"], "is_parallel": true, "priority": 0, "protocol": "exitcode", "depends": ["run_tests@exe"]}]
