@@ -1,0 +1,359 @@
+Build started at 2021-08-25T12:21:52.689801
+Main binary: /usr/bin/python3
+Build Options: 
+Python system: Linux
+The Meson build system
+Version: 0.56.2
+Source dir: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc
+Build dir: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build
+Build type: native build
+Project name: Kalman SoC
+Project version: 0.0.1
+None of 'CXX' are defined in the environment, not changing global flags.
+None of 'CXXFLAGS' are defined in the environment, not changing global flags.
+None of 'LDFLAGS' are defined in the environment, not changing global flags.
+None of 'CPPFLAGS' are defined in the environment, not changing global flags.
+None of 'CXX_LD' are defined in the environment, not changing global flags.
+Sanity testing C++ compiler: c++
+Is cross compiler: False.
+None of 'CXX_LD' are defined in the environment, not changing global flags.
+Sanity check compiler command line: c++ /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckcpp.cc -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckcpp.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckcpp.exe
+C++ compiler for the host machine: c++ (gcc 10.3.0 "c++ (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C++ linker for the host machine: c++ ld.bfd 2.36.1
+None of 'AR' are defined in the environment, not changing global flags.
+None of 'CXX' are defined in the environment, not changing global flags.
+None of 'CXXFLAGS' are defined in the environment, not changing global flags.
+None of 'LDFLAGS' are defined in the environment, not changing global flags.
+None of 'CPPFLAGS' are defined in the environment, not changing global flags.
+None of 'CXX_LD' are defined in the environment, not changing global flags.
+Sanity testing C++ compiler: c++
+Is cross compiler: False.
+None of 'CXX_LD' are defined in the environment, not changing global flags.
+Sanity check compiler command line: c++ /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckcpp.cc -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckcpp.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckcpp.exe
+C++ compiler for the build machine: c++ (gcc 10.3.0 "c++ (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C++ linker for the build machine: c++ ld.bfd 2.36.1
+None of 'AR' are defined in the environment, not changing global flags.
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+Program python3 found: YES (/usr/bin/python3)
+Program clang-format found: YES (/usr/bin/clang-format)
+WARNING: Tried to mix libraries for machines 0 and 1 in target 'backtest' This will fail in cross build.
+
+Executing subproject cpputest method cmake 
+
+CMake binary for MachineChoice.BUILD is not cached
+None of 'CMAKE' are defined in the environment, not changing global flags.
+CMake binary missing from cross or native file, or env var undefined.
+Trying a default CMake fallback at cmake
+Found CMake: /usr/bin/cmake (3.18.4)
+None of 'CMAKE_PREFIX_PATH' are defined in the environment, not changing global flags.
+
+Configuring the build directory with CMake version 3.18.4
+Running CMake with: -G Ninja -DCMAKE_INSTALL_PREFIX=/usr/local -DEXTENSIONS=True
+  - build directory:          /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/__CMake_build
+  - source directory:         /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest
+  - toolchain file:           /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/CMakeMesonToolchainFile.cmake
+  - preload file:             /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/data/preload.cmake
+  - trace args:               --trace-expand --trace-format=json-v1 --no-warn-unused-cli --trace-redirect=cmake_trace.txt
+  - disabled policy warnings: [CMP0025, CMP0047, CMP0056, CMP0060, CMP0065, CMP0066, CMP0067, CMP0082, CMP0089, CMP0102]
+
+Calling CMake (['/usr/bin/cmake']) in /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/__CMake_build with:
+  - "-G"
+  - "Ninja"
+  - "-DCMAKE_INSTALL_PREFIX=/usr/local"
+  - "-DEXTENSIONS=True"
+  - "--trace-expand"
+  - "--trace-format=json-v1"
+  - "--no-warn-unused-cli"
+  - "--trace-redirect=cmake_trace.txt"
+  - "-DCMAKE_POLICY_WARNING_CMP0025=OFF"
+  - "-DCMAKE_POLICY_WARNING_CMP0047=OFF"
+  - "-DCMAKE_POLICY_WARNING_CMP0056=OFF"
+  - "-DCMAKE_POLICY_WARNING_CMP0060=OFF"
+  - "-DCMAKE_POLICY_WARNING_CMP0065=OFF"
+  - "-DCMAKE_POLICY_WARNING_CMP0066=OFF"
+  - "-DCMAKE_POLICY_WARNING_CMP0067=OFF"
+  - "-DCMAKE_POLICY_WARNING_CMP0082=OFF"
+  - "-DCMAKE_POLICY_WARNING_CMP0089=OFF"
+  - "-DCMAKE_POLICY_WARNING_CMP0102=OFF"
+  - "-DCMAKE_TOOLCHAIN_FILE=/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/CMakeMesonToolchainFile.cmake"
+  - "-DMESON_PRELOAD_FILE=/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/data/preload.cmake"
+  - "/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest"
+Running with expanded trace output on.
+Not searching for unused variables given on the command line.
+Trace will be written to cmake_trace.txt
+-- The C compiler identification is GNU 10.3.0
+-- The CXX compiler identification is GNU 10.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Looking for fork
+-- Looking for fork - found
+-- Looking for gettimeofday
+-- Looking for gettimeofday - found
+-- Looking for pthread_mutex_lock
+-- Looking for pthread_mutex_lock - found
+-- Looking for strdup
+-- Looking for strdup - found
+-- Found PkgConfig: /usr/bin/pkg-config (found version "0.29.2") 
+-- Performing Test WARNING_C_FLAG_Weverything
+-- Performing Test WARNING_C_FLAG_Weverything - Failed
+-- Performing Test WARNING_C_FLAG_Wall
+-- Performing Test WARNING_C_FLAG_Wall - Success
+-- Performing Test WARNING_C_FLAG_Wextra
+-- Performing Test WARNING_C_FLAG_Wextra - Success
+-- Performing Test WARNING_C_FLAG_pedantic
+-- Performing Test WARNING_C_FLAG_pedantic - Success
+-- Performing Test WARNING_C_FLAG_Wshadow
+-- Performing Test WARNING_C_FLAG_Wshadow - Success
+-- Performing Test WARNING_C_FLAG_Wswitch-default
+-- Performing Test WARNING_C_FLAG_Wswitch-default - Success
+-- Performing Test WARNING_C_FLAG_Wswitch-enum
+-- Performing Test WARNING_C_FLAG_Wswitch-enum - Success
+-- Performing Test WARNING_C_FLAG_Wconversion
+-- Performing Test WARNING_C_FLAG_Wconversion - Success
+-- Performing Test WARNING_C_FLAG_Wsign-conversion
+-- Performing Test WARNING_C_FLAG_Wsign-conversion - Success
+-- Performing Test WARNING_C_FLAG_Wno-padded
+-- Performing Test WARNING_C_FLAG_Wno-padded - Success
+-- Performing Test WARNING_C_FLAG_Wno-disabled-macro-expansion
+-- Performing Test WARNING_C_FLAG_Wno-disabled-macro-expansion - Failed
+-- Performing Test WARNING_C_FLAG_Wno-reserved-id-macro
+-- Performing Test WARNING_C_FLAG_Wno-reserved-id-macro - Failed
+-- Performing Test WARNING_C_FLAG_Wno-keyword-macro
+-- Performing Test WARNING_C_FLAG_Wno-keyword-macro - Failed
+-- Performing Test WARNING_C_FLAG_Wno-long-long
+-- Performing Test WARNING_C_FLAG_Wno-long-long - Success
+-- Performing Test WARNING_C_FLAG_Wstrict-prototypes
+-- Performing Test WARNING_C_FLAG_Wstrict-prototypes - Success
+-- Performing Test WARNING_CXX_FLAG_Weverything
+-- Performing Test WARNING_CXX_FLAG_Weverything - Failed
+-- Performing Test WARNING_CXX_FLAG_Wall
+-- Performing Test WARNING_CXX_FLAG_Wall - Success
+-- Performing Test WARNING_CXX_FLAG_Wextra
+-- Performing Test WARNING_CXX_FLAG_Wextra - Success
+-- Performing Test WARNING_CXX_FLAG_pedantic
+-- Performing Test WARNING_CXX_FLAG_pedantic - Success
+-- Performing Test WARNING_CXX_FLAG_Wshadow
+-- Performing Test WARNING_CXX_FLAG_Wshadow - Success
+-- Performing Test WARNING_CXX_FLAG_Wswitch-default
+-- Performing Test WARNING_CXX_FLAG_Wswitch-default - Success
+-- Performing Test WARNING_CXX_FLAG_Wswitch-enum
+-- Performing Test WARNING_CXX_FLAG_Wswitch-enum - Success
+-- Performing Test WARNING_CXX_FLAG_Wconversion
+-- Performing Test WARNING_CXX_FLAG_Wconversion - Success
+-- Performing Test WARNING_CXX_FLAG_Wsign-conversion
+-- Performing Test WARNING_CXX_FLAG_Wsign-conversion - Success
+-- Performing Test WARNING_CXX_FLAG_Wno-padded
+-- Performing Test WARNING_CXX_FLAG_Wno-padded - Success
+-- Performing Test WARNING_CXX_FLAG_Wno-disabled-macro-expansion
+-- Performing Test WARNING_CXX_FLAG_Wno-disabled-macro-expansion - Failed
+-- Performing Test WARNING_CXX_FLAG_Wno-reserved-id-macro
+-- Performing Test WARNING_CXX_FLAG_Wno-reserved-id-macro - Failed
+-- Performing Test WARNING_CXX_FLAG_Wno-keyword-macro
+-- Performing Test WARNING_CXX_FLAG_Wno-keyword-macro - Failed
+-- Performing Test WARNING_CXX_FLAG_Wno-long-long
+-- Performing Test WARNING_CXX_FLAG_Wno-long-long - Success
+-- Performing Test WARNING_CXX_FLAG_Woverloaded-virtual
+-- Performing Test WARNING_CXX_FLAG_Woverloaded-virtual - Success
+-- Performing Test WARNING_CXX_FLAG_Wno-global-constructors
+-- Performing Test WARNING_CXX_FLAG_Wno-global-constructors - Failed
+-- Performing Test WARNING_CXX_FLAG_Wno-exit-time-destructors
+-- Performing Test WARNING_CXX_FLAG_Wno-exit-time-destructors - Failed
+-- Performing Test WARNING_CXX_FLAG_Wno-weak-vtables
+-- Performing Test WARNING_CXX_FLAG_Wno-weak-vtables - Failed
+-- Performing Test WARNING_CXX_FLAG_Wno-old-style-cast
+-- Performing Test WARNING_CXX_FLAG_Wno-old-style-cast - Success
+
+-------------------------------------------------------
+CppUTest Version 4.0
+
+Current compiler options:
+    CC:                                 /usr/bin/cc
+    CXX:                                /usr/bin/c++
+    CppUTest CFLAGS:                     -include "/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/MemoryLeakDetectorMallocMacros.h"  -Wall -Wextra -pedantic -Wshadow -Wswitch-default -Wswitch-enum -Wconversion -Wsign-conversion -Wno-padded -Wno-long-long -Wstrict-prototypes
+    CppUTest CXXFLAGS:                   -include "/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/MemoryLeakDetectorNewMacros.h" -include "/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/MemoryLeakDetectorMallocMacros.h"  -Wall -Wextra -pedantic -Wshadow -Wswitch-default -Wswitch-enum -Wconversion -Wsign-conversion -Wno-padded -Wno-long-long -Woverloaded-virtual -Wno-old-style-cast
+    CppUTest LDFLAGS:                   
+
+Features configured in CppUTest:
+    Memory Leak Detection:              ON
+    Compiling Extensions:               True
+    Support Long Long:                  OFF
+    Use CppUTest flags:                 ON
+
+    Using Standard C library:           ON
+    Using Standard C++ library:         ON
+    Using C++11 library:                OFF
+
+    Generating map file:                OFF
+    Compiling with coverage:            OFF
+
+    Compile and run self-tests          ON
+    Run self-tests separately           OFF
+
+-------------------------------------------------------
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/__CMake_build
+
+CMake configuration: SUCCEEDED
+CMake trace warning: add_executable() non imported executables are not supported
+CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/tests/CppUTest/CMakeLists.txt:55 add_executable(['CppUTestTests', 'AllTests.cpp;SetPluginTest.cpp;CheatSheetTest.cpp;SimpleStringTest.cpp;SimpleStringCacheTest.cpp;CompatabilityTests.cpp;CommandLineArgumentsTest.cpp;TestFailureTest.cpp;TestFailureNaNTest.cpp;CommandLineTestRunnerTest.cpp;TestFilterTest.cpp;TestHarness_cTest.cpp;JUnitOutputTest.cpp;TestHarness_cTestCFile.c;DummyMemoryLeakDetector.cpp;MemoryLeakDetectorTest.cpp;TestInstallerTest.cpp;AllocLetTestFree.c;MemoryOperatorOverloadTest.cpp;TestMemoryAllocatorTest.cpp;MemoryLeakWarningTest.cpp;TestOutputTest.cpp;AllocLetTestFreeTest.cpp;TestRegistryTest.cpp;AllocationInCFile.c;PluginTest.cpp;TestResultTest.cpp;PreprocessorTest.cpp;TestUTestMacro.cpp;TestUTestStringMacro.cpp;AllocationInCppFile.cpp;UtestTest.cpp;SimpleMutexTest.cpp;UtestPlatformTest.cpp;TeamCityOutputTest.cpp'])
+CMake trace warning: set_target_properties() TARGET CppUTestTests not found
+CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/cmake/Modules/CppUTestNormalizeTestOutputLocation.cmake:3 set_target_properties(['CppUTestTests', 'PROPERTIES', 'RUNTIME_OUTPUT_DIRECTORY', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/__CMake_build/tests/CppUTest'])
+CMake trace warning: target_link_options() TARGET CppUTestTests not found
+CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/tests/CppUTest/CMakeLists.txt:57 target_link_libraries(['CppUTestTests', 'CppUTest', ''])
+CMake trace warning: add_custom_command() TARGET syntax is currently not supported
+CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/cmake/Modules/CppUTestBuildTimeDiscoverTests.cmake:12 add_custom_command(['TARGET', 'CppUTestTests', 'POST_BUILD', 'COMMAND', '/usr/bin/cmake', '-DTESTS_DETAILED:BOOL=OFF', '-DEXECUTABLE=', '-P', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/cmake/Scripts/CppUTestBuildTimeDiscoverTests.cmake', 'VERBATIM', 'WORKING_DIRECTORY', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/__CMake_build/tests/CppUTest', 'COMMENT', 'Discovering Tests in CppUTestTests', 'VERBATIM'])
+CMake trace warning: add_executable() non imported executables are not supported
+CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/tests/CppUTestExt/CMakeLists.txt:37 add_executable(['CppUTestExtTests', 'AllTests.cpp;CodeMemoryReporterTest.cpp;GMockTest.cpp;GTest1Test.cpp;IEEE754PluginTest.cpp;IEEE754PluginTest_c.c;MemoryReportAllocatorTest.cpp;MemoryReporterPluginTest.cpp;MemoryReportFormatterTest.cpp;MockActualCallTest.cpp;MockCheatSheetTest.cpp;MockCallTest.cpp;MockComparatorCopierTest.cpp;MockExpectedCallTest.cpp;ExpectedFunctionsListTest.cpp;MockFailureReporterForTest.cpp;MockFailureTest.cpp;MockHierarchyTest.cpp;MockNamedValueTest.cpp;MockParameterTest.cpp;MockPluginTest.cpp;MockSupportTest.cpp;MockSupport_cTestCFile.c;MockSupport_cTest.cpp;MockStrictOrderTest.cpp;MockReturnValueTest.cpp;OrderedTestTest_c.c;OrderedTestTest.cpp'])
+CMake trace warning: set_target_properties() TARGET CppUTestExtTests not found
+CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/cmake/Modules/CppUTestNormalizeTestOutputLocation.cmake:3 set_target_properties(['CppUTestExtTests', 'PROPERTIES', 'RUNTIME_OUTPUT_DIRECTORY', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/__CMake_build/tests/CppUTestExt'])
+CMake trace warning: target_link_options() TARGET CppUTestExtTests not found
+CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/tests/CppUTestExt/CMakeLists.txt:39 target_link_libraries(['CppUTestExtTests', 'CppUTest', 'CppUTestExt', '', ''])
+CMake trace warning: add_custom_command() TARGET syntax is currently not supported
+CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/cmake/Modules/CppUTestBuildTimeDiscoverTests.cmake:12 add_custom_command(['TARGET', 'CppUTestExtTests', 'POST_BUILD', 'COMMAND', '/usr/bin/cmake', '-DTESTS_DETAILED:BOOL=OFF', '-DEXECUTABLE=', '-P', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/cmake/Scripts/CppUTestBuildTimeDiscoverTests.cmake', 'VERBATIM', 'WORKING_DIRECTORY', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/__CMake_build/tests/CppUTestExt', 'COMMENT', 'Discovering Tests in CppUTestExtTests', 'VERBATIM'])
+CMake TARGET:
+  -- name:      CppUTest
+  -- type:      NORMAL
+  -- imported:  False
+  -- properties: {
+      'INCLUDE_DIRECTORIES': ['/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/src/CppUTest/../../include']
+      'INTERFACE_INCLUDE_DIRECTORIES': ['/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/src/CppUTest/../../include']
+      'PUBLIC_HEADER': ['/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/CommandLineArguments.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/PlatformSpecificFunctions.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestMemoryAllocator.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/CommandLineTestRunner.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/PlatformSpecificFunctions_c.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestOutput.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/CppUTestConfig.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/SimpleString.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/SimpleStringInternalCache.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestPlugin.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/JUnitTestOutput.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TeamCityTestOutput.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/StandardCLibrary.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestRegistry.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/MemoryLeakDetector.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestFailure.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestResult.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/MemoryLeakDetectorMallocMacros.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestFilter.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestTestingFixture.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/MemoryLeakDetectorNewMacros.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestHarness.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/Utest.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/MemoryLeakWarningPlugin.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/TestHarness_c.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/UtestMacros.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTest/SimpleMutex.h']
+     }
+  -- tline: CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/src/CppUTest/CMakeLists.txt:1 add_library(['CppUTest', 'CommandLineArguments.cpp', 'MemoryLeakWarningPlugin.cpp', 'TestHarness_c.cpp', 'TestRegistry.cpp', 'CommandLineTestRunner.cpp', 'SimpleString.cpp', 'SimpleStringInternalCache.cpp', 'TestMemoryAllocator.cpp', 'TestResult.cpp', 'JUnitTestOutput.cpp', 'TeamCityTestOutput.cpp', 'TestFailure.cpp', 'TestOutput.cpp', 'MemoryLeakDetector.cpp', 'TestFilter.cpp', 'TestPlugin.cpp', 'TestTestingFixture.cpp', 'SimpleMutex.cpp', 'Utest.cpp'])
+CMake TARGET:
+  -- name:      CppUTestExt
+  -- type:      NORMAL
+  -- imported:  False
+  -- properties: {
+      'LINK_LIBRARIES': []
+      'INTERFACE_LINK_LIBRARIES': []
+      'INCLUDE_DIRECTORIES': ['/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/src/CppUTestExt/../../include']
+      'INTERFACE_INCLUDE_DIRECTORIES': ['/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/src/CppUTestExt/../../include']
+      'PUBLIC_HEADER': ['/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/CodeMemoryReportFormatter.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/IEEE754ExceptionsPlugin.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MemoryReportAllocator.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockExpectedCall.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockCheckedExpectedCall.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockExpectedCallsList.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockSupportPlugin.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MemoryReportFormatter.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockFailure.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockSupport.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockSupport_c.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/GMock.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/GTest.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/GTestSupport.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MemoryReporterPlugin.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/OrderedTest.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/GTestConvertor.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockActualCall.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockCheckedActualCall.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockNamedValue.h', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockSupport.h']
+     }
+  -- tline: CMake TRACE: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/src/CppUTestExt/CMakeLists.txt:43 add_library(['CppUTestExt', 'STATIC', 'CodeMemoryReportFormatter.cpp;GTest.cpp;IEEE754ExceptionsPlugin.cpp;MemoryReporterPlugin.cpp;MockFailure.cpp;MockSupportPlugin.cpp;MockActualCall.cpp;MockSupport_c.cpp;MemoryReportAllocator.cpp;MockExpectedCall.cpp;MockNamedValue.cpp;OrderedTest.cpp;MemoryReportFormatter.cpp;MockExpectedCallsList.cpp;MockSupport.cpp', '/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/CodeMemoryReportFormatter.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/IEEE754ExceptionsPlugin.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MemoryReportAllocator.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockExpectedCall.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockCheckedExpectedCall.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockExpectedCallsList.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockSupportPlugin.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MemoryReportFormatter.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockFailure.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockSupport.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockSupport_c.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/GMock.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/GTest.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/GTestSupport.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MemoryReporterPlugin.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/OrderedTest.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/GTestConvertor.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockActualCall.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockCheckedActualCall.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockNamedValue.h;/home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/dep/cpputest/include/CppUTestExt/MockSupport.h'])
+CMake project CppUTest has 32 build targets.
+
+Processing generated meson AST
+Build file: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/dep/cpputest/meson.build
+
+Project name: CppUTest
+Project version: undefined
+None of 'CC' are defined in the environment, not changing global flags.
+None of 'CFLAGS' are defined in the environment, not changing global flags.
+None of 'LDFLAGS' are defined in the environment, not changing global flags.
+None of 'CPPFLAGS' are defined in the environment, not changing global flags.
+None of 'CC_LD' are defined in the environment, not changing global flags.
+Sanity testing C compiler: cc
+Is cross compiler: False.
+None of 'CC_LD' are defined in the environment, not changing global flags.
+Sanity check compiler command line: cc /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckc.c -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckc.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckc.exe
+C compiler for the host machine: cc (gcc 10.3.0 "cc (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C linker for the host machine: cc ld.bfd 2.36.1
+C++ compiler for the host machine: c++ (gcc 10.3.0 "c++ (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C++ linker for the host machine: c++ ld.bfd 2.36.1
+None of 'CC' are defined in the environment, not changing global flags.
+None of 'CFLAGS' are defined in the environment, not changing global flags.
+None of 'LDFLAGS' are defined in the environment, not changing global flags.
+None of 'CPPFLAGS' are defined in the environment, not changing global flags.
+None of 'CC_LD' are defined in the environment, not changing global flags.
+Sanity testing C compiler: cc
+Is cross compiler: False.
+None of 'CC_LD' are defined in the environment, not changing global flags.
+Sanity check compiler command line: cc /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckc.c -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckc.exe -pipe -D_FILE_OFFSET_BITS=64
+Sanity check compile stdout:
+
+-----
+Sanity check compile stderr:
+
+-----
+Running test binary command: /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/sanitycheckc.exe
+C compiler for the build machine: cc (gcc 10.3.0 "cc (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C linker for the build machine: cc ld.bfd 2.36.1
+C++ compiler for the build machine: c++ (gcc 10.3.0 "c++ (Ubuntu 10.3.0-1ubuntu1) 10.3.0")
+C++ linker for the build machine: c++ ld.bfd 2.36.1
+Build targets in project: 34
+Subproject cpputest finished.
+
+
+WARNING: Tried to mix libraries for machines 0 and 1 in target 'run_tests' This will fail in cross build.
+WARNING: Tried to mix libraries for machines 0 and 1 in target 'run_tests' This will fail in cross build.
+Adding test "cpputest"
+Message: 
+Build commands:
+    ninja           compile
+    ninja clean     clean
+    ninja lint      prints a diff for files that do not match the style guide
+
+Build targets in project: 36
+
+Kalman SoC 0.0.1
+
+  Subprojects
+    cpputest: YES
+
+Found ninja-1.10.1 at /usr/bin/ninja
+Running compile:
+Working directory:  /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/tmpq3nvp9fc
+Command line:  c++ /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/tmpq3nvp9fc/testfile.cpp -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/tmpq3nvp9fc/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -fpermissive --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/10/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../lib/:/lib/x86_64-linux-gnu/10/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/10/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+Running compile:
+Working directory:  /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/tmp70w3jw_u
+Command line:  c++ /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/tmp70w3jw_u/testfile.cpp -o /home/mulles/Documents/2020_Documents/UNI/Master/Beuth_Berlin/Semester_4_SS2021_Masterarbeit/2021_LibreSolar/Code_and_Doc/kalman-soc/build/meson-private/tmp70w3jw_u/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -fpermissive --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-linux-gnu/10/
+programs: =/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/bin/
+libraries: =/usr/lib/gcc/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu/10/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../lib/:/lib/x86_64-linux-gnu/10/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/10/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../../x86_64-linux-gnu/lib/:/usr/lib/gcc/x86_64-linux-gnu/10/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+None of 'STRIP' are defined in the environment, not changing global flags.
+None of 'STRIP' are defined in the environment, not changing global flags.
