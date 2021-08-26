@@ -1,6 +1,6 @@
 # kalman-soc
 
-Fork of Okra's lightweight embedded state of charge (SOC) algorithm based on extend kalman filter (EKF). 
+Fork of Okra's lightweight embedded state of charge (SoC) algorithm based on extend kalman filter (EKF). 
 
 ## Usage (Linux) 
    

@@ -9,7 +9,11 @@ SoCKalman::SoCKalman() :
 
 {}
 
-void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, uint32_t batteryEff, uint32_t batteryVoltage, uint32_t initialSoC)
+void SoCKalman::init(bool isBattery12V,
+                     bool isBatteryLithium,
+                     uint32_t batteryEff,
+                     uint32_t batteryVoltage,
+                     uint32_t initialSoC)
 {
     _batteryEff = batteryEff;
     _isBattery12V = isBattery12V;
@@ -37,37 +41,78 @@ uint32_t SoCKalman::efficiency()
     return _batteryEff;
 }
 
-void SoCKalman::f(bool isBatteryInFloat, int32_t batteryMilliWatts, uint32_t samplePeriodMilliSec, uint32_t batteryCapacity)
+void SoCKalman::f(bool isBatteryInFloat,
+                  int32_t batteryMilliWatts,
+                  uint32_t samplePeriodMilliSec,
+                  uint32_t batteryCapacityWattHour)
 {
-    uint32_t milliSecToHours = 3600000;
-    int32_t powerChange = ((batteryMilliWatts / 1000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours));   // scaling should be fine here
-    uint32_t newSoC = (_x[0] * batteryCapacity + powerChange) / batteryCapacity;                                   // scaling should be fine here
+    uint32_t milliSecToHours = 3600000; 
+    int32_t energyChangeWattHour = ((batteryMilliWatts / 1000) * _batteryEff *
+    (samplePeriodMilliSec / milliSecToHours));
+    uint32_t newSoC = (_x[0] * batteryCapacityWattHour + energyChangeWattHour) /
+    batteryCapacityWattHour;
 
     _x[0] = newSoC;
 
     if (isBatteryInFloat) {
         _millisecondsInFloat += samplePeriodMilliSec;
         if (_millisecondsInFloat > _floatResetDuration) {
-            _batteryEff = (uint64_t)_batteryEff * (uint64_t)SOC_SCALED_HUNDRED_PERCENT / _previousSoC;
+            _batteryEff = (uint64_t)_batteryEff * (uint64_t)SOC_SCALED_HUNDRED_PERCENT / 
+            _previousSoC;
             _batteryEff = clamp(_batteryEff, 0, SOC_SCALED_HUNDRED_PERCENT);
             _x[0] = SOC_SCALED_HUNDRED_PERCENT;
         }
-    } else {
+    } else { 
         _millisecondsInFloat = 0;
     }
 }
 
 void SoCKalman::h(int32_t batteryMilliAmps)
 {
-    // _h is the voltage that most closely matches current soc (a number)
-    // _H is an array of form [ocv gradient, measured current, 1] (the last parameter is the offset)
-    // x_[0] = SOC, _x[1] = R
+    // _h is the voltage in the OCV Lookup table that most closely matches the predicted SoC x_[0]
+    // _H is an array/vector of form [ocv gradient, measured current, 1] (the last parameter is the
+    // offset)
+    // x_[0] = SOC, _x[1] = R, TODO _x[2]= hysteresis voltage?  
 
-    uint32_t dummyLeadAcidVoltage[101] = { 11640, 11653, 11666, 11679, 11692, 11706, 11719, 11732, 11745, 11758, 11772, 11785, 11798, 11811, 11824, 11838, 11851, 11864, 11877, 11890, 11904, 11917, 11930, 11943, 11956, 11970, 11983, 11996, 12009, 12022, 12036, 12049, 12062, 12075, 12088, 12102, 12115, 12128, 12141, 12154, 12168, 12181, 12194, 12207, 12220, 12234, 12247, 12260, 12273, 12286, 12300, 12313, 12326, 12339, 12352, 12366, 12379, 12392, 12405, 12418, 12432, 12445, 12458, 12471, 12484, 12498, 12511, 12524, 12537, 12550, 12564, 12577, 12590, 12603, 12616, 12630, 12643, 12656, 12669, 12682, 12696, 12709, 12722, 12735, 12748, 12762, 12775, 12788, 12801, 12814, 12828, 12841, 12854, 12867, 12880, 12894, 12907, 12920, 12933, 12946, 12960 };
-    uint32_t dummyLithiumVoltage[101] = { 5000, 6266, 7434, 8085, 8531, 8867, 9134, 9355, 9543, 9705, 9847, 9974, 10088, 10191, 10285, 10372, 10451, 10525, 10595, 10659, 10720, 10777, 10831, 10882, 10931, 10977, 11021, 11063, 11104, 11142, 11180, 11216, 11251, 11284, 11317, 11349, 11379, 11409, 11438, 11467, 11495, 11522, 11548, 11574, 11600, 11625, 11650, 11675, 11699, 11723, 11746, 11769, 11793, 11815, 11838, 11861, 11883, 11906, 11928, 11950, 11972, 11994, 12017, 12039, 12061, 12083, 12105, 12127, 12150, 12172, 12195, 12217, 12240, 12263, 12286, 12309, 12333, 12356, 12380, 12404, 12428, 12452, 12477, 12501, 12526, 12552, 12577, 12603, 12629, 12655, 12682, 12708, 12735, 12763, 12790, 12818, 12846, 12875, 12903, 12931, 12960 };
-    uint32_t dummyOcvSoc[101] = { 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000, 31000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 49000, 50000, 51000, 52000, 53000, 54000, 55000, 56000, 57000, 58000, 59000, 60000, 61000, 62000, 63000, 64000, 65000, 66000, 67000, 68000, 69000, 70000, 71000, 72000, 73000, 74000, 75000, 76000, 77000, 78000, 79000, 80000, 81000, 82000, 83000, 84000, 85000, 86000, 87000, 88000, 89000, 90000, 91000, 92000, 93000, 94000, 95000, 96000, 97000, 98000, 99000, 100000 };
+    uint32_t dummyLeadAcidVoltage[101] = { 11640, 11653, 11666, 11679, 11692, 11706, 11719, 11732,
+                                           11745, 11758, 11772, 11785, 11798, 11811, 11824, 11838,
+                                           11851, 11864, 11877, 11890, 11904, 11917, 11930, 11943,
+                                           11956, 11970, 11983, 11996, 12009, 12022, 12036, 12049,
+                                           12062, 12075, 12088, 12102, 12115, 12128, 12141, 12154,
+                                           12168, 12181, 12194, 12207, 12220, 12234, 12247, 12260,
+                                           12273, 12286, 12300, 12313, 12326, 12339, 12352, 12366,
+                                           12379, 12392, 12405, 12418, 12432, 12445, 12458, 12471,
+                                           12484, 12498, 12511, 12524, 12537, 12550, 12564, 12577,
+                                           12590, 12603, 12616, 12630, 12643, 12656, 12669, 12682,
+                                           12696, 12709, 12722, 12735, 12748, 12762, 12775, 12788,
+                                           12801, 12814, 12828, 12841, 12854, 12867, 12880, 12894,
+                                           12907, 12920, 12933, 12946, 12960 };
+    uint32_t dummyLithiumVoltage[101] = { 5000, 6266, 7434, 8085, 8531, 8867, 9134, 9355, 9543, 
+                                          9705, 9847, 9974, 10088, 10191, 10285, 10372, 10451,
+                                          10525, 10595, 10659, 10720, 10777, 10831, 10882, 10931,
+                                          10977, 11021, 11063, 11104, 11142, 11180, 11216, 11251,
+                                          11284, 11317, 11349, 11379, 11409, 11438, 11467, 11495,
+                                          11522, 11548, 11574, 11600, 11625, 11650, 11675, 11699,
+                                          11723, 11746, 11769, 11793, 11815, 11838, 11861, 11883,
+                                          11906, 11928, 11950, 11972, 11994, 12017, 12039, 12061,
+                                          12083, 12105, 12127, 12150, 12172, 12195, 12217, 12240,
+                                          12263, 12286, 12309, 12333, 12356, 12380, 12404, 12428,
+                                          12452, 12477, 12501, 12526, 12552, 12577, 12603, 12629,
+                                          12655, 12682, 12708, 12735, 12763, 12790, 12818, 12846,
+                                          12875, 12903, 12931, 12960 };
+    uint32_t dummyOcvSoc[101] = { 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000,
+                                  11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000,
+                                  20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000,
+                                  29000, 30000, 31000, 32000, 33000, 34000, 35000, 36000, 37000,
+                                  38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, 46000,
+                                  47000, 48000, 49000, 50000, 51000, 52000, 53000, 54000, 55000,
+                                  56000, 57000, 58000, 59000, 60000, 61000, 62000, 63000, 64000,
+                                  65000, 66000, 67000, 68000, 69000, 70000, 71000, 72000, 73000,
+                                  74000, 75000, 76000, 77000, 78000, 79000, 80000, 81000, 82000,
+                                  83000, 84000, 85000, 86000, 87000, 88000, 89000, 90000, 91000,
+                                  92000, 93000, 94000, 95000, 96000, 97000, 98000, 99000, 100000 };
 
-    // update voltage closest to current state of charge as well as gradient
+    // update voltage closest to predicted SoC as well as gradient
     int i;
     uint16_t multiplier;
 
@@ -80,11 +125,15 @@ void SoCKalman::h(int32_t batteryMilliAmps)
     for (i = 0; i < 101; i++) {
         if (dummyOcvSoc[i] > (uint32_t)_x[0]) {
             if (_isBatteryLithium) {
-                _h = (dummyLithiumVoltage[i] + dummyLithiumVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;   // units should be good here
-                _H[0] = (dummyLithiumVoltage[i] - dummyLithiumVoltage[i - 1]) * multiplier * 100 / (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);              // units are good here
+                _h = (dummyLithiumVoltage[i] + dummyLithiumVoltage[i - 1]) * multiplier / 2 + 
+                     (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;
+                _H[0] = (dummyLithiumVoltage[i] -  dummyLithiumVoltage[i - 1]) *
+                        multiplier * 100 / (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);
             } else {
-                _h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;
-                _H[0] = (dummyLeadAcidVoltage[i] - dummyLeadAcidVoltage[i - 1]) * multiplier * 100 / (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);
+                _h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) * multiplier / 2 +
+                     (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;
+                _H[0] = (dummyLeadAcidVoltage[i] - dummyLeadAcidVoltage[i - 1]) * multiplier * 100 /
+                        (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);
             }
             _H[1] = batteryMilliAmps / 1000;   // should be good in Amps
             _H[2] = 1;                         // offset
@@ -93,8 +142,12 @@ void SoCKalman::h(int32_t batteryMilliAmps)
     }
 }
 
-void SoCKalman::sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t batteryVoltage, int32_t batteryMilliWatts, uint32_t samplePeriodMilliSec,
-    uint32_t batteryCapacity)
+void SoCKalman::sample(bool isBatteryInFloat,
+                       int32_t batteryMilliAmps,
+                       uint32_t batteryVoltage,
+                       int32_t batteryMilliWatts,
+                       uint32_t samplePeriodMilliSec,
+                       uint32_t batteryCapacityWattHour)
 {
     float temp0[_n * _n];
     float temp1[_n * _n];
@@ -103,19 +156,22 @@ void SoCKalman::sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t
     float temp4[_m * _m];
     float temp5;
 
-    // $\hat{x}_k = f(\hat{x}_{k-1})$
-    f(isBatteryInFloat, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
 
-    // $P_k = A_{k-1} P_{k-1} A^T_{k-1} + Q_{k-1}$ -- updates _pPre
+    // Predict (Steps): 
+
+    // $\hat{x}_k = f(\hat{x}_{k-1}, u_k)$ -- calculates x[0] with u_k=batteryMilliWatts
+    f(isBatteryInFloat, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
+
+    // $P_k = A_{k-1} P_{k-1} A^T_{k-1} + Q_{k-1}$ -- calculates _pPre F_k= A_k -- State transition 
+    // model
     matMult(_a, _pPost, temp0, _n, _n, _n);
     transpose(_a, _at, _n, _n);
     matMult(temp0, _at, temp1, _n, _n, _n);
     matAdd(temp1, _q, _pPre, _n * _n);
 
-    // update measurable (voltage) based on predicted state (SOC)
-    h(batteryMilliAmps);
+    // Update (Steps):
 
-    // $G_k = P_k H^T_k (H_k P_k H^T_k + R)^{-1}$
+    // $G_k = P_k H^T_k (H_k P_k H^T_k + R)^{-1}$ aka $K_k $ (Gain)
     transpose(_H, _Ht, _m, _n);
     matMult(_pPre, _Ht, temp2, _n, _n, _m);
     matMult(_H, _pPre, temp3, _m, _n, _n);
@@ -123,13 +179,16 @@ void SoCKalman::sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t
     temp5 = 1 / (temp4[0] + _rval);
     matMultConst(temp2, temp5, _G, _n * _m);
 
-    // $\hat{x}_k = \hat{x_k} + G_k(z_k - h(\hat{x}_k))$
-    temp5 = batteryVoltage - _h;
+    // $\hat{y}_k=h(x_{k-1},u_{k})$  with $ \hat{y}_k=_h $
+    h(batteryMilliAmps);  // estimate measurable voltage based on predicted state (SoC)
+    temp5 = batteryVoltage - _h; // Innovation or measurement residual 
+    
+    // $\hat{x}_k = \hat{x_k} + G_k(z_k - h(\hat{x}_k))$ 
     matMultConst(_G, temp5, temp3, _n * _m);
-    updateState(temp3, _n * _m);
+    updateState(temp3, _n * _m); // Update system state estimate vector _x[0] (output)
     _x[0] = clamp((uint32_t)_x[0], 0, SOC_SCALED_HUNDRED_PERCENT);
 
-    // $P_k = (I - G_k H_k) P_k$
+    // $P_k = (I - G_k H_k) P_k$ Update system state error
     matMult(_G, _H, temp0, _n, _m, _n);
     negate(temp0, _n * _n);
     diagonalMatrix(1.0, temp1);
@@ -262,3 +321,4 @@ uint32_t SoCKalman::clamp(uint32_t value, uint32_t min, uint32_t max)
     }
     return value;
 }
+
