@@ -203,7 +203,8 @@ uint32_t SoCKalman::calculateInitialSoC(uint32_t batteryVoltage)
     // will need to add 24 V compatability
 
     const uint8_t VOLTAGES_SIZE = 10;
-    const uint16_t battSoCVoltages[VOLTAGES_SIZE] = { 12720, 12600, 12480, 12360, 12240, 12120, 12000, 11880, 11760, 11640 };
+    const uint16_t battSoCVoltages[VOLTAGES_SIZE] = { 12720, 12600, 12480, 12360, 12240, 12120,
+                                                      12000, 11880, 11760, 11640 };
 
     uint8_t index;
     for (index = 0; index < VOLTAGES_SIZE; index++)

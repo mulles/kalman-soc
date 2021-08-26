@@ -44,11 +44,11 @@ TEST(SoCKalmanTest, ShouldIncreaseSoCNoFloatLeadAcid12V)
     int32_t batteryMilliAmps = 1000;
     int32_t batteryMilliWatts = 12500;
     uint32_t samplePeriodMilliSec = 3600000;
-    uint32_t batteryCapacity = 50 * 12;   // 50 Ah, 12 V
+    uint32_t batteryCapacityWattHour = 50 * 12;   // 50 Ah, 12 V
     uint32_t expectedResult = 56201;
 
     kalman.init(true, false, batteryEff, batteryVoltage, initialSoC);
-    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
     uint32_t result = kalman.read();
 
     CHECK_EQUAL(expectedResult, result);
@@ -64,11 +64,11 @@ TEST(SoCKalmanTest, ShouldDecreaseSoCNoFloatLeadAcid12V)
     int32_t batteryMilliAmps = -1000;
     int32_t batteryMilliWatts = -12000;
     uint32_t samplePeriodMilliSec = 3600000;
-    uint32_t batteryCapacity = 50 * 12;   // 50 Ah, 12 V
+    uint32_t batteryCapacityWattHour = 50 * 12;   // 50 Ah, 12 V
     uint32_t expectedResult = 41023;
 
     kalman.init(true, false, batteryEff, batteryVoltage, initialSoC);
-    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
     uint32_t result = kalman.read();
 
     CHECK_EQUAL(expectedResult, result);
@@ -84,12 +84,12 @@ TEST(SoCKalmanTest, ShouldIncreaseSoCTwiceNoFloatLeadAcid12V)
     int32_t batteryMilliAmps = 1000;
     int32_t batteryMilliWatts = 12500;
     uint32_t samplePeriodMilliSec = 3600000;
-    uint32_t batteryCapacity = 50 * 12;   // 50 Ah, 12 V
+    uint32_t batteryCapacityWattHour = 50 * 12;   // 50 Ah, 12 V
     uint32_t expectedResult = 58272;
 
     kalman.init(true, false, batteryEff, batteryVoltage, initialSoC);
-    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
-    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
+    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
     uint32_t result = kalman.read();
 
     CHECK_EQUAL(expectedResult, result);
@@ -105,7 +105,7 @@ TEST(SoCKalmanTest, ShouldIncreaseSoCTwiceNoFloatLeadAcid12V)
 //     int32_t batteryMilliAmps = 1000;
 //     uint32_t batteryMilliWatts = 12700;
 //     uint32_t samplePeriodMilliSec = 3600000;
-//     uint32_t batteryCapacity = 50 * 12;   // 50 Ah, 12 V
+//     uint32_t batteryCapacityWattHour = 50 * 12;   // 50 Ah, 12 V
 //     uint32_t expectedResult = 100000;  // 100 %
 
 //     mock().expectOneCall("HAL_GetTick").andReturnValue(0);        // get start time
@@ -114,8 +114,8 @@ TEST(SoCKalmanTest, ShouldIncreaseSoCTwiceNoFloatLeadAcid12V)
 //     mock().expectOneCall("HAL_GetTick").andReturnValue(600001);   // reset
 
 //     kalman.init(true, false, batteryEff, batteryVoltage, initialSoC);
-//     kalman.sample(true, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
-//     kalman.sample(true, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+//     kalman.sample(true, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
+//     kalman.sample(true, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
 //     uint32_t result = kalman.read();
 
 //     CHECK_EQUAL(expectedResult, result);
@@ -131,11 +131,11 @@ TEST(SoCKalmanTest, ShouldIncreaseSoCNoFloatLithium12V)
     int32_t batteryMilliAmps = 1000;
     int32_t batteryMilliWatts = 12000;
     uint32_t samplePeriodMilliSec = 3600000;
-    uint32_t batteryCapacity = 50 * 12;   // 50 Ah, 12 V
+    uint32_t batteryCapacityWattHour = 50 * 12;   // 50 Ah, 12 V
     uint32_t expectedResult = 57600;
 
     kalman.init(true, true, batteryEff, batteryVoltage, initialSoC);
-    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
     uint32_t result = kalman.read();
 
     CHECK_EQUAL(expectedResult, result);
@@ -151,11 +151,11 @@ TEST(SoCKalmanTest, ShouldDecreaseSoCNoFloatLithium12V)
     int32_t batteryMilliAmps = -1000;
     int32_t batteryMilliWatts = -11500;
     uint32_t samplePeriodMilliSec = 3600000;
-    uint32_t batteryCapacity = 50 * 12;   // 50 Ah, 12 V
+    uint32_t batteryCapacityWattHour = 50 * 12;   // 50 Ah, 12 V
     uint32_t expectedResult = 42136;
 
     kalman.init(true, true, batteryEff, batteryVoltage, initialSoC);
-    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
     uint32_t result = kalman.read();
 
     CHECK_EQUAL(expectedResult, result);
@@ -171,11 +171,11 @@ TEST(SoCKalmanTest, ShouldIncreaseSoCNoFloatLeadAcid24V)
     int32_t batteryMilliAmps = 1000;
     int32_t batteryMilliWatts = 12500 * 2;
     uint32_t samplePeriodMilliSec = 3600000;
-    uint32_t batteryCapacity = 50 * 24;   // 50 Ah, 12 V
+    uint32_t batteryCapacityWattHour = 50 * 24;   // 50 Ah, 12 V
     uint32_t expectedResult = 61655;
 
     kalman.init(false, false, batteryEff, batteryVoltage, initialSoC);
-    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
     uint32_t result = kalman.read();
 
     CHECK_EQUAL(expectedResult, result);
@@ -191,11 +191,11 @@ TEST(SoCKalmanTest, ShouldNotOverflowMaxCalcs)
     int32_t batteryMilliAmps = 10000;
     int32_t batteryMilliWatts = 125000;
     uint32_t samplePeriodMilliSec = 3600000;   // 1 hour sample time
-    uint32_t batteryCapacity = 50 * 12;
+    uint32_t batteryCapacityWattHour = 50 * 12;
     uint32_t expectedResult = 100000;   // 100 %
 
     kalman.init(true, false, batteryEff, batteryVoltage, initialSoC);
-    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+    kalman.sample(false, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
     uint32_t result = kalman.read();
 
     CHECK_EQUAL(expectedResult, result);

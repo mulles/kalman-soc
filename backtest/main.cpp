@@ -113,7 +113,7 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
 
     uint32_t batteryEff = 85000;
     uint32_t initialSoC = 0xFFFFFFFF;
-    uint32_t batteryCapacity = 1200;
+    uint32_t batteryCapacityWattHour = 1200;
 
     // Create a vector of <string, int vector> pairs to store the result
     std::vector<std::pair<std::string, std::vector<int> > > result;
@@ -193,7 +193,7 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
             uint32_t batteryVoltage = result.at(3).second.back();
             int32_t batteryMilliWatts = result.at(1).second.back();
             uint32_t samplePeriodMilliSec = result.at(4).second.back();
-            kalman.sample(isBatteryInFloat, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+            kalman.sample(isBatteryInFloat, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
             uint32_t soc = kalman.read();
             result.at(colIdx).second.push_back(soc);
         }
