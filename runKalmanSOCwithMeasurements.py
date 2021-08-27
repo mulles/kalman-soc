@@ -81,12 +81,13 @@ subprocess.run("./backtest",cwd = buildDir)
 
 dfProcessedSensorData = pd.read_csv(outputDataDir + 'processed_sensor_data.csv')
 dfRawSensorData.to_csv(outputDataDir + queryStart + queryStop + '_processed_sensor_data.csv',index=False)
-#dfProcessedSensorDataEnhanced = dfProcessedSensorData.insert()
- 
+
+dfProcessedSensorDataEnhanced = dfProcessedSensorData
+dfProcessedSensorDataEnhanced.insert(6, "SoC_LibreSolar", dfRawSensorData['SOC_pct'] * 1000, True)
+dfProcessedSensorDataEnhanced.to_csv(outputDataDir + queryStart + queryStop + '_enhanced_processed_sensor_data.csv',index=False)
+
 
 #write_api = client.write_api(write_options=SYNCHRONOUS)
 
 #p = influxdb_client.Point("my_measurement").tag("location", "Prague").field("temperature", 25.3)
 #write_api.write(bucket=bucket, org=org, record=p)
-
-
