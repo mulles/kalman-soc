@@ -5,7 +5,8 @@
   # 1.2. write to /data/raw_sensor_data.csv
   # 2.Executes ./backtest
   # 3.Reads the calculated SOC from the /data/processed_sensor_data.csv
-  # 4.Writes it into the influxdb on the correct place.
+  # 4.Visualise the difference between SOC from Libre Solar Algo and Kalman-SoC Algo.
+  # 5.Writes it into the influxdb on the correct place.
  
 
 #requirements: python3 -m pip install influxdb ?
@@ -22,95 +23,70 @@ org ="LibreSolar"
 token =os.getenv('TOKEN')  # can be set in command line as well if no .env file is used in rootdir
 url="https://influxdb.lsserver.uber.space"
 toMilli = 1000
-query_start = '2021-05-28T20:10:00.000Z'
-query_stop = '2021-05-29T02:19:00.000Z'
+queryStart = '2021-05-28T20:10:00.000Z'
+queryStop = '2021-05-29T02:19:00.000Z'
+currentWorkingDir =  os.getcwd()
+outputDataDir = currentWorkingDir + '/data/'
+buildDir = currentWorkingDir + '/build/'
+
+if not (os.path.isfile(outputDataDir + queryStart + queryStop + '_nonstruct_raw_sensor_data.csv')):
+  print(outputDataDir + queryStart + queryStop + '_nonstruct_raw_sensor_data_.csv')
+  client = InfluxDBClient(
+    url=url,
+    token=token,
+    org=org
+  )
+  # |> range(start: -97d, stop: -95d)
+  query_api = client.query_api()
+  query = 'from(bucket:"LabjackCurrentVoltage")\
+  |> range(start:' + queryStart + ', stop:' + queryStop + ')\
+  |> filter(fn: (r) => r["_measurement"] == "V" or r["_measurement"] == "A" or r["_measurement"] == "Info")\
+  |> filter(fn: (r) => r["_field"] == "Bat_V" or r["_field"] == "Bat_A" or r["_field"] == "ChgState" or r["_field"] == "SOC_pct")\
+  |> filter(fn: (r) => r["device"] == "mppt-1210-hus")'
+  # do structing with flux seems inefficient (>8s)
+  #|> group(columns: ["_time"])'
+  #|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
 
 
+  # csv_result = query_api.query_csv(query,dialect=Dialect(header=False, delimiter=",",
+  # comment_prefix="#", annotations=[],date_time_format="RFC3339"))
 
-client = InfluxDBClient(
-   url=url,
-   token=token,
-   org=org
-)
-# |> range(start: -97d, stop: -95d)
-query_api = client.query_api()
-query = 'from(bucket:"LabjackCurrentVoltage")\
-|> range(start:' + query_start + ', stop:' + query_stop + ')\
-|> filter(fn: (r) => r["_measurement"] == "V" or r["_measurement"] == "A" or r["_measurement"] == "Info")\
-|> filter(fn: (r) => r["_field"] == "Bat_V" or r["_field"] == "Bat_A" or r["_field"] == "ChgState" or r["_field"] == "SOC_pct")\
-|> filter(fn: (r) => r["device"] == "mppt-1210-hus")'
-# do structing with flux seems inefficient (>8s)
-#|> group(columns: ["_time"])'
-#|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
+  dfQuery= client.query_api().query_data_frame(org=org, query=query)
+  dfQuery.to_csv(outputDataDir + queryStart + queryStop + '_nonstruct_raw_sensor_data.csv',index=False)
 
+  client.close()
 
-# csv_result = query_api.query_csv(query,dialect=Dialect(header=False, delimiter=",",
-# comment_prefix="#", annotations=[],date_time_format="RFC3339"))
+else: dfQuery = pd.read_csv(outputDataDir + queryStart + queryStop + '_nonstruct_raw_sensor_data.csv')
 
-df_query= client.query_api().query_data_frame(org=org, query=query)
-print(df_query)
-df_query.to_csv(os.getcwd()+'/data/nonstruct_raw_sensor_data_'+ query_start + query_stop +'.csv',index=False)
+print(dfQuery)
 
-df_query = df_query.pivot(index = '_time',columns = '_field', values='_value').reset_index()
-print(df_query)
+dfRawSensorData = dfQuery.pivot(index = '_time',columns = '_field', values='_value').reset_index()
+print(dfRawSensorData)
 
-df_query = df_query[['Bat_A', 'ChgState','Bat_V','_time','SOC_pct']] # reorder column to:
+dfRawSensorData = dfRawSensorData[['Bat_A', 'ChgState','Bat_V','_time','SOC_pct']] # reorder column to:
 #batteryMilliAmps,	batteryMilliWatts,	isBatteryInFloat,	 batteryVoltage,	samplePeriodMilliSec	 timestamp
-df_query["Bat_A"] = toMilli * df_query["Bat_A"]
-df_query["Bat_V"] = toMilli * df_query["Bat_V"]
-df_query.insert(1, "batteryMilliWatts",df_query['Bat_A'] * df_query['Bat_V'] , True)
-df_query.insert(4, "samplePeriodMilliSec", '1' , True)
-df_query = df_query.rename(columns={"Bat_A": "batteryMilliAmps", "batteryMilliWatts": "batteryMilliWatts","ChgState": "isBatteryInFloat", "Bat_V": "batteryVoltage", "samplePeriodMilliSec" : "samplePeriodMilliSec", "_time": "timestamp"})
-df_query = df_query.astype({'batteryMilliAmps' : 'int32',	'batteryMilliWatts' : 'int32','isBatteryInFloat': 'int32',	 'batteryVoltage': 'int32',	'samplePeriodMilliSec': 'int32'})
-print(df_query)
-print(df_query.info())
+dfRawSensorData["Bat_A"] = toMilli * dfRawSensorData["Bat_A"]
+dfRawSensorData["Bat_V"] = toMilli * dfRawSensorData["Bat_V"]
+dfRawSensorData.insert(1, "batteryMilliWatts",dfRawSensorData['Bat_A'] * dfRawSensorData['Bat_V'] , True)
+dfRawSensorData.insert(4, "samplePeriodMilliSec", '1' , True)
+dfRawSensorData = dfRawSensorData.rename(columns={"Bat_A": "batteryMilliAmps", "batteryMilliWatts": "batteryMilliWatts","ChgState": "isBatteryInFloat", "Bat_V": "batteryVoltage", "samplePeriodMilliSec" : "samplePeriodMilliSec", "_time": "timestamp"})
+dfRawSensorData = dfRawSensorData.astype({'batteryMilliAmps' : 'int32',	'batteryMilliWatts' : 'int32','isBatteryInFloat': 'int32',	 'batteryVoltage': 'int32',	'samplePeriodMilliSec': 'int32'})
+print(dfRawSensorData)
+print(dfRawSensorData.info())
 
-df_query.to_csv(os.getcwd()+'/data/raw_sensor_data.csv',index=False)
+dfRawSensorData.to_csv(outputDataDir + queryStart + queryStop + '_raw_sensor_data.csv',index=False)
+dfRawSensorData.to_csv(outputDataDir + 'raw_sensor_data.csv',index=False)
 
-subprocess.run("./backtest",cwd =os.getcwd()+"/build/")
+subprocess.run("./backtest",cwd = buildDir)
+
+dfProcessedSensorData = pd.read_csv(outputDataDir + 'processed_sensor_data.csv')
+dfRawSensorData.to_csv(outputDataDir + queryStart + queryStop + '_processed_sensor_data.csv',index=False)
+#dfProcessedSensorDataEnhanced = dfProcessedSensorData.insert()
+ 
 
 #write_api = client.write_api(write_options=SYNCHRONOUS)
 
 #p = influxdb_client.Point("my_measurement").tag("location", "Prague").field("temperature", 25.3)
 #write_api.write(bucket=bucket, org=org, record=p)
-
-
-"""
-Close client
-"""
-client.close()
-
-# with open('raw_sensor_data.csv', 'w', newline='') as f:
-#     writer = csv.writer(f)
-#     writer.writerows(csv_result)
-
-
-#from(bucket:"LabjackCurrentVoltage")
-# |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-# |> filter(fn: (r) => r["_measurement"] == "A" or r["_field"] == "Bat_A" or r["device"] == "mppt-1210-hus") 
-# |> filter(fn: (r) => r["_measurement"] == "V" or r["_field"] == "Bat_V" or r["device"] == "mppt-1210-hus")
-# |> drop(columns: ["_stop"])
-# |> drop(columns: ["_start"])
-# |> group(columns: ["_time"])
-# |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
-# |> map(fn: (r) => ({ _time: r._time, "1": r.first, "2": r.second, "3": r.third, "4": r.fourth}))
-# |> rename(columns: { "1": "First", "2": "Second", "3": "Third", "4": "Fourth" })
-# 
-# 
-
-#data_1 = from(bucket:"LabjackCurrentVoltage")
-#  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-#  |> filter(fn: (r) => r["_measurement"] == "A" and r["_field"] == "Bat_A" and r["device"] == "mppt-1210-hus")
-#  
-#data_2 = from(bucket:"LabjackCurrentVoltage")
-#  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-#  |> filter(fn: (r) => r["_measurement"] == "V" and r["_field"] == "Bat_V" and r["device"] == "mppt-1210-hus")
-#  
-#join(
-#  tables: {d1: data_1, d2: data_2},
-#  |> columns(column: "_value")
-#  on: ["_time"]
-#)
-
 
 

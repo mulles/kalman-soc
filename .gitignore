@@ -6,6 +6,9 @@ downloadBuildKalmanSOC.sh
 .vscode.backup/
 .idea/
 
+#Libre Office temp files
+
+*#
 
 #Gedit backup files
 *~
