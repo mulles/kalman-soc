@@ -4,7 +4,8 @@
   #      batteryVoltage,	samplePeriodMilliSec,	timestamp, therest
   # 1.2. write to /data/raw_sensor_data.csv
   # 2.Executes ./backtest
-  # 3.Reads the calculated SOC from the /data/processed_sensor_data.csv
+  # 3.Reads the calculated SOC from the /data/processed_sensor_data.csv and
+  #   writes it back to enhanced_processed_sensor_data.csv
   # 4.Visualise the difference between SOC from Libre Solar Algo and Kalman-SoC Algo.
   # 5.Writes it into the influxdb on the correct place.
  
@@ -13,6 +14,7 @@
 import os 
 import subprocess
 import pandas as pd
+import matplotlib.pyplot as plt
 from influxdb_client import InfluxDBClient, Point, Dialect
 from influxdb_client .client.write_api import SYNCHRONOUS
 from dotenv import load_dotenv
@@ -67,7 +69,7 @@ dfRawSensorData = dfRawSensorData[['Bat_A', 'ChgState','Bat_V','_time','SOC_pct'
 #batteryMilliAmps,	batteryMilliWatts,	isBatteryInFloat,	 batteryVoltage,	samplePeriodMilliSec	 timestamp
 dfRawSensorData["Bat_A"] = toMilli * dfRawSensorData["Bat_A"]
 dfRawSensorData["Bat_V"] = toMilli * dfRawSensorData["Bat_V"]
-dfRawSensorData.insert(1, "batteryMilliWatts",dfRawSensorData['Bat_A'] * dfRawSensorData['Bat_V'] , True)
+dfRawSensorData.insert(1, "batteryMilliWatts",dfRawSensorData['Bat_A'] * dfRawSensorData['Bat_V'] / 1000, True)
 dfRawSensorData.insert(4, "samplePeriodMilliSec", '1' , True)
 dfRawSensorData = dfRawSensorData.rename(columns={"Bat_A": "batteryMilliAmps", "batteryMilliWatts": "batteryMilliWatts","ChgState": "isBatteryInFloat", "Bat_V": "batteryVoltage", "samplePeriodMilliSec" : "samplePeriodMilliSec", "_time": "timestamp"})
 dfRawSensorData = dfRawSensorData.astype({'batteryMilliAmps' : 'int32',	'batteryMilliWatts' : 'int32','isBatteryInFloat': 'int32',	 'batteryVoltage': 'int32',	'samplePeriodMilliSec': 'int32'})
@@ -83,9 +85,20 @@ dfProcessedSensorData = pd.read_csv(outputDataDir + 'processed_sensor_data.csv')
 dfRawSensorData.to_csv(outputDataDir + queryStart + queryStop + '_processed_sensor_data.csv',index=False)
 
 dfProcessedSensorDataEnhanced = dfProcessedSensorData
-dfProcessedSensorDataEnhanced.insert(6, "SoC_LibreSolar", dfRawSensorData['SOC_pct'] * 1000, True)
+dfProcessedSensorDataEnhanced.insert(6, "SoC_LibreSolar", dfRawSensorData['SOC_pct']/10, True)
+dfProcessedSensorDataEnhanced["kalman_soc"] =  dfProcessedSensorDataEnhanced["kalman_soc"] / 10000 
+dfProcessedSensorDataEnhanced["batteryMilliWatts"] =  dfProcessedSensorDataEnhanced["batteryMilliWatts"] / 100000 
+dfProcessedSensorDataEnhanced["batteryVoltage"] =  dfProcessedSensorDataEnhanced["batteryVoltage"] / 1000 
+dfProcessedSensorDataEnhanced["batteryMilliAmps"] =  dfProcessedSensorDataEnhanced["batteryMilliAmps"] / 1000 
+
 dfProcessedSensorDataEnhanced.to_csv(outputDataDir + queryStart + queryStop + '_enhanced_processed_sensor_data.csv',index=False)
 
+#dfProcessedSensorDataEnhanced.plot()
+#plt.show()
+
+pd.options.plotting.backend = "plotly"
+fig = dfProcessedSensorDataEnhanced.plot()
+fig.show()
 
 #write_api = client.write_api(write_options=SYNCHRONOUS)
 
