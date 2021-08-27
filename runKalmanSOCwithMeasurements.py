@@ -67,10 +67,10 @@ print(dfRawSensorData)
 
 dfRawSensorData = dfRawSensorData[['Bat_A', 'ChgState','Bat_V','_time','SOC_pct']] # reorder column to:
 #batteryMilliAmps,	batteryMilliWatts,	isBatteryInFloat,	 batteryVoltage,	samplePeriodMilliSec	 timestamp
-dfRawSensorData["Bat_A"] = toMilli * dfRawSensorData["Bat_A"]
-dfRawSensorData["Bat_V"] = toMilli * dfRawSensorData["Bat_V"]
+dfRawSensorData["Bat_A"] = dfRawSensorData["Bat_A"] * toMilli
+dfRawSensorData["Bat_V"] = dfRawSensorData["Bat_V"] * toMilli
 dfRawSensorData.insert(1, "batteryMilliWatts",dfRawSensorData['Bat_A'] * dfRawSensorData['Bat_V'] / 1000, True)
-dfRawSensorData.insert(4, "samplePeriodMilliSec", '1' , True)
+dfRawSensorData.insert(4, "samplePeriodMilliSec", '1000' , True)
 dfRawSensorData = dfRawSensorData.rename(columns={"Bat_A": "batteryMilliAmps", "batteryMilliWatts": "batteryMilliWatts","ChgState": "isBatteryInFloat", "Bat_V": "batteryVoltage", "samplePeriodMilliSec" : "samplePeriodMilliSec", "_time": "timestamp"})
 dfRawSensorData = dfRawSensorData.astype({'batteryMilliAmps' : 'int32',	'batteryMilliWatts' : 'int32','isBatteryInFloat': 'int32',	 'batteryVoltage': 'int32',	'samplePeriodMilliSec': 'int32'})
 print(dfRawSensorData)
@@ -90,6 +90,8 @@ dfProcessedSensorDataEnhanced["kalman_soc"] =  dfProcessedSensorDataEnhanced["ka
 dfProcessedSensorDataEnhanced["batteryMilliWatts"] =  dfProcessedSensorDataEnhanced["batteryMilliWatts"] / 100000 
 dfProcessedSensorDataEnhanced["batteryVoltage"] =  dfProcessedSensorDataEnhanced["batteryVoltage"] / 1000 
 dfProcessedSensorDataEnhanced["batteryMilliAmps"] =  dfProcessedSensorDataEnhanced["batteryMilliAmps"] / 1000 
+dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] =  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] / 1000 
+
 
 dfProcessedSensorDataEnhanced.to_csv(outputDataDir + queryStart + queryStop + '_enhanced_processed_sensor_data.csv',index=False)
 
