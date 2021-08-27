@@ -29,8 +29,8 @@ currentWorkingDir =  os.getcwd()
 outputDataDir = currentWorkingDir + '/data/'
 buildDir = currentWorkingDir + '/build/'
 
-if not (os.path.isfile(outputDataDir + queryStart + queryStop + '_nonstruct_raw_sensor_data.csv')):
-  print(outputDataDir + queryStart + queryStop + '_nonstruct_raw_sensor_data_.csv')
+if not (os.path.isfile(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')):
+  print(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
   client = InfluxDBClient(
     url=url,
     token=token,
@@ -52,11 +52,11 @@ if not (os.path.isfile(outputDataDir + queryStart + queryStop + '_nonstruct_raw_
   # comment_prefix="#", annotations=[],date_time_format="RFC3339"))
 
   dfQuery= client.query_api().query_data_frame(org=org, query=query)
-  dfQuery.to_csv(outputDataDir + queryStart + queryStop + '_nonstruct_raw_sensor_data.csv',index=False)
+  dfQuery.to_csv(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv',index=False)
 
   client.close()
 
-else: dfQuery = pd.read_csv(outputDataDir + queryStart + queryStop + '_nonstruct_raw_sensor_data.csv')
+else: dfQuery = pd.read_csv(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
 
 print(dfQuery)
 
