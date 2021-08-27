@@ -1,25 +1,25 @@
 #This Script 
   # 1.gets the measurement data from influxdb
-  # 1.1. struct it as follows row1: batteryMilliAmps,	batteryMilliWatts,	isBatteryInFloat,	batteryVoltage,	samplePeriodMilliSec,	timestamp, therest
+  # 1.1. struct it as follows row1: batteryMilliAmps,	batteryMilliWatts,	isBatteryInFloat,
+  #      batteryVoltage,	samplePeriodMilliSec,	timestamp, therest
   # 1.2. write to /data/raw_sensor_data.csv
   # 2.Executes ./backtest
   # 3.Reads the calculated SOC from the /data/processed_sensor_data.csv
-  # 4.Writes it into the influxdb on the correct place. 
+  # 4.Writes it into the influxdb on the correct place.
  
 
-#requirements: python3 -m pip install influxdb ? 
+#requirements: python3 -m pip install influxdb ?
 import os 
 import subprocess
 import pandas as pd
 from influxdb_client import InfluxDBClient, Point, Dialect
 from influxdb_client .client.write_api import SYNCHRONOUS
-from dotenv import load_dotenv   #for python-dotenv method
-load_dotenv()                    #for python-dotenv method
-
+from dotenv import load_dotenv
+load_dotenv()  # take environment variables from .env.
 
 bucket ="LabjackCurrentVoltage"
 org ="LibreSolar"
-token =  os.environ.get('Token')
+token =os.getenv('TOKEN')  # can be set in command line as well if no .env file is used in rootdir
 url="https://influxdb.lsserver.uber.space"
 toMilli = 1000
 query_start = '2021-05-28T20:10:00.000Z'
@@ -44,11 +44,12 @@ query = 'from(bucket:"LabjackCurrentVoltage")\
 #|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
 
 
-#csv_result = query_api.query_csv(query,dialect=Dialect(header=False, delimiter=",", comment_prefix="#", annotations=[],date_time_format="RFC3339"))
+# csv_result = query_api.query_csv(query,dialect=Dialect(header=False, delimiter=",",
+# comment_prefix="#", annotations=[],date_time_format="RFC3339"))
 
 df_query= client.query_api().query_data_frame(org=org, query=query)
 print(df_query)
-df_query.to_csv(os.getcwd()+'/data/nonstruct_raw_sensor_data_{query_start}_{query_stop}.csv',index=False)
+df_query.to_csv(os.getcwd()+'/data/nonstruct_raw_sensor_data_'+ query_start + query_stop +'.csv',index=False)
 
 df_query = df_query.pivot(index = '_time',columns = '_field', values='_value').reset_index()
 print(df_query)
@@ -66,7 +67,7 @@ print(df_query.info())
 
 df_query.to_csv(os.getcwd()+'/data/raw_sensor_data.csv',index=False)
 
-subprocess.run("./backtest",cwd =os.getcwd()+"/builddir/")
+subprocess.run("./backtest",cwd =os.getcwd()+"/build/")
 
 #write_api = client.write_api(write_options=SYNCHRONOUS)
 
