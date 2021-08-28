@@ -2,15 +2,15 @@
   # 1.gets the measurement data from influxdb
   # 1.1. struct it as follows row1: batteryMilliAmps,	batteryMilliWatts,	isBatteryInFloat,
   #      batteryVoltage,	samplePeriodMilliSec,	timestamp, therest
-  # 1.2. write to /data/raw_sensor_data.csv
+  # 1.2. writes it to /data/raw_sensor_data.csv
   # 2.Executes ./backtest
   # 3.Reads the calculated SOC from the /data/processed_sensor_data.csv and
   #   writes it back to enhanced_processed_sensor_data.csv
   # 4.Visualise the difference between SOC from Libre Solar Algo and Kalman-SoC Algo.
-  # 5.Writes it into the influxdb on the correct place.
+  # 5.TODO Writes it into the influxdb on the correct place.
  
 
-#requirements: python3 -m pip install influxdb ?
+#requirements: pip3 install influxdb 
 import os 
 import argparse
 import subprocess
@@ -26,23 +26,19 @@ org ="LibreSolar"
 token =os.getenv('TOKEN')  # can be set in command line as well if no .env file is used in rootdir
 url="https://influxdb.lsserver.uber.space"
 toMilli = 1000
-queryStart = '2021-05-28T20:10:00.000Z'
-queryStop = '2021-05-29T02:19:00.000Z'
 currentWorkingDir =  os.getcwd()
 outputDataDir = currentWorkingDir + '/data/'
 buildDir = currentWorkingDir + '/build/'
-existInfluxDbDataQueryFile = os.path.isfile(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
 
 
-def queryDfFromInfluxDb():
+def queryDfFromInfluxDb(queryStart,queryStop):
 
-  # print(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
   client = InfluxDBClient(
     url=url,
     token=token,
     org=org
   )
-  # |> range(start: -97d, stop: -95d)
+
   query_api = client.query_api()
   query = 'from(bucket:"LabjackCurrentVoltage")\
   |> range(start:' + queryStart + ', stop:' + queryStop + ')\
@@ -53,20 +49,19 @@ def queryDfFromInfluxDb():
   #|> group(columns: ["_time"])'
   #|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
 
-
+  dfQuery = client.query_api().query_data_frame(org=org, query=query)
+  dfQuery.to_csv(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv',index=False)
   # csv_result = query_api.query_csv(query,dialect=Dialect(header=False, delimiter=",",
   # comment_prefix="#", annotations=[],date_time_format="RFC3339"))
 
-  dfQuery = client.query_api().query_data_frame(org=org, query=query)
-  dfQuery.to_csv(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv',index=False)
-  
   #write_api = client.write_api(write_options=SYNCHRONOUS)
 
   #p = influxdb_client.Point("my_measurement").tag("location", "Prague").field("temperature", 25.3)
   #write_api.write(bucket=bucket, org=org, record=p)
+
   client.close()
 
-def structQueryDataFrame():
+def structDataFrameQuery(queryStart,queryStop):
 
   dfQuery = pd.read_csv(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
   dfRawSensorData = dfQuery.pivot(index = '_time',columns = '_field', values='_value').reset_index()
@@ -90,7 +85,7 @@ def runCppBacktest():
   subprocess.run("./backtest",cwd = buildDir)
 
 
-def visualiseProcessedSensorData():
+def visualiseProcessedSensorData(queryStart,queryStop):
 
   dfProcessedSensorData = pd.read_csv(outputDataDir + 'processed_sensor_data.csv')
   dfRawSensorData = pd.read_csv(outputDataDir + 'raw_sensor_data.csv')
@@ -104,10 +99,12 @@ def visualiseProcessedSensorData():
   dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] =  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] / 1000 
 
   dfProcessedSensorDataEnhanced.to_csv(outputDataDir + queryStart + queryStop + '_enhanced_processed_sensor_data.csv',index=False)
-
+  
+  #Matplotlib
   #dfProcessedSensorDataEnhanced.plot()
   #plt.show()
 
+  #Plotly
   pd.options.plotting.backend = "plotly"
   fig = dfProcessedSensorDataEnhanced.plot()
   fig.show()
@@ -116,18 +113,18 @@ def visualiseProcessedSensorData():
 def main():
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("--start", help = "Query start at either in -95d or in 2021-05-28T20:10:00.000Z (default) format")
-  parser.add_argument("--stop", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z (default) format")
-  args = vars(parser.parse_args())
-  queryStart = args['start']
-  queryStop  = args['stop']
-
+  parser.add_argument("--start", dest="queryStart", help = "Query start at either in -97d or in 2021-05-28T20:10:00.000Z(default)  format", default = "2021-05-28T20:10:00.000Z")
+  parser.add_argument("--stop" , dest="queryStop", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z(default)  format", default = "2021-05-29T01:19:00.000Z")
+  args = parser.parse_args()
+  queryStart = args.queryStart
+  queryStop  = args.queryStop
+  existInfluxDbDataQueryFile = os.path.isfile(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
   if not existInfluxDbDataQueryFile:
-    queryDfFromInfluxDb()
+    queryDfFromInfluxDb(queryStart,queryStop)
   
-  structQueryDataFrame()
+  structDataFrameQuery(queryStart,queryStop)
   runCppBacktest()
-  visualiseProcessedSensorData()
+  visualiseProcessedSensorData(queryStart,queryStop)
 
 if __name__ == "__main__":
     main()
