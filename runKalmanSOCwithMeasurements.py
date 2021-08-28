@@ -75,8 +75,8 @@ def structDataFrameQuery(queryStart,queryStop):
   dfRawSensorData.insert(4, "samplePeriodMilliSec", '1000' , True)
   dfRawSensorData = dfRawSensorData.rename(columns={"Bat_A": "batteryMilliAmps", "batteryMilliWatts": "batteryMilliWatts","ChgState": "isBatteryInFloat", "Bat_V": "batteryVoltage", "samplePeriodMilliSec" : "samplePeriodMilliSec", "_time": "timestamp"})
   dfRawSensorData = dfRawSensorData.astype({'batteryMilliAmps' : 'int32',	'batteryMilliWatts' : 'int32','isBatteryInFloat': 'int32',	 'batteryVoltage': 'int32',	'samplePeriodMilliSec': 'int32'})
-  print(dfRawSensorData)
-  print(dfRawSensorData.info())
+  #print(dfRawSensorData)
+  #print(dfRawSensorData.info())
 
   dfRawSensorData.to_csv(outputDataDir + queryStart + queryStop + '_raw_sensor_data.csv',index=False)
   dfRawSensorData.to_csv(outputDataDir + 'raw_sensor_data.csv',index=False)
@@ -109,22 +109,27 @@ def visualiseProcessedSensorData(queryStart,queryStop):
   fig = dfProcessedSensorDataEnhanced.plot()
   fig.show()
 
+def unzipDataset(queryStart,queryStop):
+
+zf = zipfile.ZipFile('zipfile_write.zip', mode='w')
+
+def zipDataset(queryStart,queryStop):
 
 def main():
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("--start", dest="queryStart", help = "Query start at either in -97d or in 2021-05-28T20:10:00.000Z(default)  format", default = "2021-05-28T20:10:00.000Z")
-  parser.add_argument("--stop" , dest="queryStop", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z(default)  format", default = "2021-05-29T01:19:00.000Z")
+  parser.add_argument("--start", dest="queryStart", help = "Query start at either in -97d or in 2021-05-28T20:10:00.000Z(default)  format", default = "2021-05-05T16:11:00.000Z")
+  parser.add_argument("--stop" , dest="queryStop", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z(default)  format", default = "2021-05-29T00:19:00.000Z")
   args = parser.parse_args()
   queryStart = args.queryStart
   queryStop  = args.queryStop
   existInfluxDbDataQueryFile = os.path.isfile(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
   if not existInfluxDbDataQueryFile:
     queryDfFromInfluxDb(queryStart,queryStop)
-  
-  structDataFrameQuery(queryStart,queryStop)
-  runCppBacktest()
+    structDataFrameQuery(queryStart,queryStop)
+    runCppBacktest()
+  unzipDataset(queryStart,queryStop)
   visualiseProcessedSensorData(queryStart,queryStop)
-
+  zipDataset(queryStart,queryStop)
 if __name__ == "__main__":
     main()
