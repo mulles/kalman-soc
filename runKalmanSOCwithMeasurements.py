@@ -12,6 +12,7 @@
 
 #requirements: python3 -m pip install influxdb ?
 import os 
+import argparse
 import subprocess
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -30,9 +31,12 @@ queryStop = '2021-05-29T02:19:00.000Z'
 currentWorkingDir =  os.getcwd()
 outputDataDir = currentWorkingDir + '/data/'
 buildDir = currentWorkingDir + '/build/'
+existInfluxDbDataQueryFile = os.path.isfile(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
 
-if not (os.path.isfile(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')):
-  print(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
+
+def queryDfFromInfluxDb():
+
+  # print(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
   client = InfluxDBClient(
     url=url,
     token=token,
@@ -53,56 +57,77 @@ if not (os.path.isfile(outputDataDir + queryStart + queryStop + '_dbquery_raw_se
   # csv_result = query_api.query_csv(query,dialect=Dialect(header=False, delimiter=",",
   # comment_prefix="#", annotations=[],date_time_format="RFC3339"))
 
-  dfQuery= client.query_api().query_data_frame(org=org, query=query)
+  dfQuery = client.query_api().query_data_frame(org=org, query=query)
   dfQuery.to_csv(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv',index=False)
+  
+  #write_api = client.write_api(write_options=SYNCHRONOUS)
 
+  #p = influxdb_client.Point("my_measurement").tag("location", "Prague").field("temperature", 25.3)
+  #write_api.write(bucket=bucket, org=org, record=p)
   client.close()
 
-else: dfQuery = pd.read_csv(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
+def structQueryDataFrame():
 
-print(dfQuery)
+  dfQuery = pd.read_csv(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
+  dfRawSensorData = dfQuery.pivot(index = '_time',columns = '_field', values='_value').reset_index()
+  print(dfRawSensorData)
 
-dfRawSensorData = dfQuery.pivot(index = '_time',columns = '_field', values='_value').reset_index()
-print(dfRawSensorData)
+  dfRawSensorData = dfRawSensorData[['Bat_A', 'ChgState','Bat_V','_time','SOC_pct']] # reorder column to:
+  #batteryMilliAmps,	batteryMilliWatts,	isBatteryInFloat,	 batteryVoltage,	samplePeriodMilliSec	 timestamp
+  dfRawSensorData["Bat_A"] = dfRawSensorData["Bat_A"] * toMilli
+  dfRawSensorData["Bat_V"] = dfRawSensorData["Bat_V"] * toMilli
+  dfRawSensorData.insert(1, "batteryMilliWatts",dfRawSensorData['Bat_A'] * dfRawSensorData['Bat_V'] / 1000, True)
+  dfRawSensorData.insert(4, "samplePeriodMilliSec", '1000' , True)
+  dfRawSensorData = dfRawSensorData.rename(columns={"Bat_A": "batteryMilliAmps", "batteryMilliWatts": "batteryMilliWatts","ChgState": "isBatteryInFloat", "Bat_V": "batteryVoltage", "samplePeriodMilliSec" : "samplePeriodMilliSec", "_time": "timestamp"})
+  dfRawSensorData = dfRawSensorData.astype({'batteryMilliAmps' : 'int32',	'batteryMilliWatts' : 'int32','isBatteryInFloat': 'int32',	 'batteryVoltage': 'int32',	'samplePeriodMilliSec': 'int32'})
+  print(dfRawSensorData)
+  print(dfRawSensorData.info())
 
-dfRawSensorData = dfRawSensorData[['Bat_A', 'ChgState','Bat_V','_time','SOC_pct']] # reorder column to:
-#batteryMilliAmps,	batteryMilliWatts,	isBatteryInFloat,	 batteryVoltage,	samplePeriodMilliSec	 timestamp
-dfRawSensorData["Bat_A"] = dfRawSensorData["Bat_A"] * toMilli
-dfRawSensorData["Bat_V"] = dfRawSensorData["Bat_V"] * toMilli
-dfRawSensorData.insert(1, "batteryMilliWatts",dfRawSensorData['Bat_A'] * dfRawSensorData['Bat_V'] / 1000, True)
-dfRawSensorData.insert(4, "samplePeriodMilliSec", '1000' , True)
-dfRawSensorData = dfRawSensorData.rename(columns={"Bat_A": "batteryMilliAmps", "batteryMilliWatts": "batteryMilliWatts","ChgState": "isBatteryInFloat", "Bat_V": "batteryVoltage", "samplePeriodMilliSec" : "samplePeriodMilliSec", "_time": "timestamp"})
-dfRawSensorData = dfRawSensorData.astype({'batteryMilliAmps' : 'int32',	'batteryMilliWatts' : 'int32','isBatteryInFloat': 'int32',	 'batteryVoltage': 'int32',	'samplePeriodMilliSec': 'int32'})
-print(dfRawSensorData)
-print(dfRawSensorData.info())
-
-dfRawSensorData.to_csv(outputDataDir + queryStart + queryStop + '_raw_sensor_data.csv',index=False)
-dfRawSensorData.to_csv(outputDataDir + 'raw_sensor_data.csv',index=False)
-
-subprocess.run("./backtest",cwd = buildDir)
-
-dfProcessedSensorData = pd.read_csv(outputDataDir + 'processed_sensor_data.csv')
-dfRawSensorData.to_csv(outputDataDir + queryStart + queryStop + '_processed_sensor_data.csv',index=False)
-
-dfProcessedSensorDataEnhanced = dfProcessedSensorData
-dfProcessedSensorDataEnhanced.insert(6, "SoC_LibreSolar", dfRawSensorData['SOC_pct']/10, True)
-dfProcessedSensorDataEnhanced["kalman_soc"] =  dfProcessedSensorDataEnhanced["kalman_soc"] / 10000 
-dfProcessedSensorDataEnhanced["batteryMilliWatts"] =  dfProcessedSensorDataEnhanced["batteryMilliWatts"] / 100000 
-dfProcessedSensorDataEnhanced["batteryVoltage"] =  dfProcessedSensorDataEnhanced["batteryVoltage"] / 1000 
-dfProcessedSensorDataEnhanced["batteryMilliAmps"] =  dfProcessedSensorDataEnhanced["batteryMilliAmps"] / 1000 
-dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] =  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] / 1000 
+  dfRawSensorData.to_csv(outputDataDir + queryStart + queryStop + '_raw_sensor_data.csv',index=False)
+  dfRawSensorData.to_csv(outputDataDir + 'raw_sensor_data.csv',index=False)
+  
+def runCppBacktest():
+  subprocess.run("./backtest",cwd = buildDir)
 
 
-dfProcessedSensorDataEnhanced.to_csv(outputDataDir + queryStart + queryStop + '_enhanced_processed_sensor_data.csv',index=False)
+def visualiseProcessedSensorData():
 
-#dfProcessedSensorDataEnhanced.plot()
-#plt.show()
+  dfProcessedSensorData = pd.read_csv(outputDataDir + 'processed_sensor_data.csv')
+  dfRawSensorData = pd.read_csv(outputDataDir + 'raw_sensor_data.csv')
+  
+  dfProcessedSensorDataEnhanced = dfProcessedSensorData
+  dfProcessedSensorDataEnhanced.insert(6, "SoC_LibreSolar", dfRawSensorData['SOC_pct']/10, True)
+  dfProcessedSensorDataEnhanced["kalman_soc"] =  dfProcessedSensorDataEnhanced["kalman_soc"] / 10000 
+  dfProcessedSensorDataEnhanced["batteryMilliWatts"] =  dfProcessedSensorDataEnhanced["batteryMilliWatts"] / 100000 
+  dfProcessedSensorDataEnhanced["batteryVoltage"] =  dfProcessedSensorDataEnhanced["batteryVoltage"] / 1000 
+  dfProcessedSensorDataEnhanced["batteryMilliAmps"] =  dfProcessedSensorDataEnhanced["batteryMilliAmps"] / 1000 
+  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] =  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] / 1000 
 
-pd.options.plotting.backend = "plotly"
-fig = dfProcessedSensorDataEnhanced.plot()
-fig.show()
+  dfProcessedSensorDataEnhanced.to_csv(outputDataDir + queryStart + queryStop + '_enhanced_processed_sensor_data.csv',index=False)
 
-#write_api = client.write_api(write_options=SYNCHRONOUS)
+  #dfProcessedSensorDataEnhanced.plot()
+  #plt.show()
 
-#p = influxdb_client.Point("my_measurement").tag("location", "Prague").field("temperature", 25.3)
-#write_api.write(bucket=bucket, org=org, record=p)
+  pd.options.plotting.backend = "plotly"
+  fig = dfProcessedSensorDataEnhanced.plot()
+  fig.show()
+
+
+def main():
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--start", help = "Query start at either in -95d or in 2021-05-28T20:10:00.000Z (default) format")
+  parser.add_argument("--stop", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z (default) format")
+  args = vars(parser.parse_args())
+  queryStart = args['start']
+  queryStop  = args['stop']
+
+  if not existInfluxDbDataQueryFile:
+    queryDfFromInfluxDb()
+  
+  structQueryDataFrame()
+  runCppBacktest()
+  visualiseProcessedSensorData()
+
+if __name__ == "__main__":
+    main()
