@@ -3,10 +3,9 @@
 #include <stdint.h>
 
 /**
- * @brief Calculated battery state of charge (SoC) using an extended kalman filter.
- *
- * Math currently uses floating point arithmetic. Can only record differences in SoC at a 30 min 
- * interval or greater.
+ * @brief Calculated battery state of charge (SoC) using a extended kalman filter.
+ * Math currently uses floating point arithmetic. Can only record diffreences in soc at a 30 min interval
+ * or greater.
  */
 class SoCKalman
 {
@@ -14,21 +13,17 @@ class SoCKalman
     SoCKalman();
 
     /**
-     * @brief initial SoC is either passed in after being retrieved from local storage,
-     * or is estimated based on starting battery voltage
+     * @brief initial soc is either passed in after being retrieved from local storage,
+     *        or is estimated based on starting battery voltage
      *
      * @param batteryEff, batteryVoltage, initialSoC (optional)
      */
-    void init(bool isBattery12V,
-              bool isBatteryLithium,
-              uint32_t batteryEff,
-              uint32_t batteryVoltage,
-              uint32_t initialSoC);
+    void init(bool isBattery12V, bool isBatteryLithium, uint32_t batteryEff, uint32_t batteryVoltage, uint32_t initialSoC);
 
     /**
-     * @brief return current Soc in 0-100% bound. 
+     * @brief return current state of charge
      *
-     * @return uint32_t SoC
+     * @return uint32_t soc
      */
     uint32_t read();
 
@@ -39,25 +34,15 @@ class SoCKalman
      */
     uint32_t efficiency();
 
-
     /**
-     * @brief calculate new SoC based on battery voltage as well as, how much power entered/exited
-     * the battery in a given window  (TODO better use energy not power, imho power can't enter batteries
-     * charge or energy does)
-     * 
-     * recalculate battery efficiency 
-     *  
-     * reset SoC = 100% if battery is in float
+     * @brief calculate new soc based on how much power entered/exited the battery in a given
+     * window as well as the battery voltage, also recalculate battery efficiency and 
+     * reset soc = 100% if battery is in float
      *
-     * @param isBatteryInFloat, isBatteryLithium, batteryMilliAmps, batteryVoltage,
-     * batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour
+     * @param isBatteryInFloat, isBatteryLithium, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity
      */
-    void sample(bool isBatteryInFloat,
-                int32_t batteryMilliAmps,
-                uint32_t batteryVoltage, 
-                int32_t batteryMilliWatts, 
-                uint32_t samplePeriodMilliSec,
-                uint32_t batteryCapacityWattHour);
+    void sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t batteryVoltage, int32_t batteryMilliWatts, uint32_t samplePeriodMilliSec,
+        uint32_t batteryCapacity);
 
   private:
     uint32_t _previousSoC;
@@ -78,53 +63,31 @@ class SoCKalman
     bool _isBatteryLithium;
     uint32_t _millisecondsInFloat = 0;
     uint32_t _floatResetDuration = 600000;  // 10 minutes in milliseconds
-    int32_t _x[3] = { 0, 0, 0 }; // state vector [SoC,R, hyteresis voltage?] /TODO
+    int32_t _x[3] = { 0, 0, 0 };
     uint8_t _n = 3;
     uint8_t _m = 1;
     const uint32_t SOC_SCALED_HUNDRED_PERCENT = 100000;  // 100% charge = 100000
-    const uint32_t SOC_SCALED_MAX = 2 * SOC_SCALED_HUNDRED_PERCENT;  // allow SoC to track up higher
-    // than 100% to gauge efficiency
+    const uint32_t SOC_SCALED_MAX = 2 * SOC_SCALED_HUNDRED_PERCENT;  // allow soc to track up higher than 100% to gauge efficiency
 
     /**
-     * @brief estimate an initial SoC based on battery voltage using a hardcoded OCV lookup table
-     * for a given batteryVoltage it gives back a Soc, means inverse h function:  
-     * x_k=h^-1(batteryVoltage)
+     * @brief estimate an initial soc based on battery voltage
      *
      * @param batteryVoltage
      *
-     * @return uint32_t SoC
+     * @return uint32_t soc
      */
     uint32_t calculateInitialSoC(uint32_t batteryVoltage);
 
     /**
-     * @brief predict the state of charge ahead one step using a Coulomb counting model for the 
-     * function f for the state space equation: 
-     * f( x_k, p_k, \Delta t) = x_k - \frac{\Delta t}{Q} p_k 
-     * with
-     * SoC                                  x_k 
-     * power in mW                          p_k
-     * time period between measurements     \Delta t  
-     * battery  capacity in Wh (constant)   Q     
+     * @brief project the state of charge ahead one step using a Coulomb counting model
      * 
-     * calculates _batteryEff[0-1] based on the SoC at 10min in float charging mode. TODO If you do not
-     * call the function with batteryEff > 0 it might always stay at 0 so would the SoC ? 
-     * 
-     * @param isBatteryinFloat, batteryMilliWatts, samplePeridoMilliSec, batteryCapacityWattHour
-     * 
-     * 
-     * 
+     * @param isBatteryinFloat, batteryMilliWatts, samplePeridoMilliSec, batteryCapacity
      */
-    void f(bool isBatteryInFloat,
-           int32_t batteryMilliWatts,
-           uint32_t samplePeriodMilliSec,
-           uint32_t batteryCapacityWattHour);
+    void f(bool isBatteryInFloat, int32_t batteryMilliWatts, uint32_t samplePeriodMilliSec, uint32_t batteryCapacity);
 
     /**
-     * @brief predict measured battery voltage from the newly predicted state of charge _x using a 
-     * h function for the measurement equation aka output equation: 
-     * h(x_k) = OCV(x_k)
-     * with
-     * hardcoded OCV lookup table    OCV(x_k)
+     * @brief predict the measurable value (voltage) ahead one step using the newly estimated state of charge
+     * 
      * @param isBatteryLithium, batteryMilliAmps
      */
     void h(int32_t batteryMilliAmps);
