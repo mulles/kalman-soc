@@ -109,11 +109,9 @@ def visualiseProcessedSensorData(queryStart,queryStop):
   fig = dfProcessedSensorDataEnhanced.plot()
   fig.show()
 
-def unzipDataset(queryStart,queryStop):
-
-zf = zipfile.ZipFile('zipfile_write.zip', mode='w')
-
-def zipDataset(queryStart,queryStop):
+#def unzipDataset(queryStart,queryStop):
+#zf = zipfile.ZipFile(outputDataDir + queryStart + queryStop +'.zip', mode='w')
+#def zipDataset(queryStart,queryStop):
 
 def main():
 
@@ -128,8 +126,8 @@ def main():
     queryDfFromInfluxDb(queryStart,queryStop)
     structDataFrameQuery(queryStart,queryStop)
     runCppBacktest()
-  unzipDataset(queryStart,queryStop)
+  #unzipDataset(queryStart,queryStop)
   visualiseProcessedSensorData(queryStart,queryStop)
-  zipDataset(queryStart,queryStop)
+  #zipDataset(queryStart,queryStop)
 if __name__ == "__main__":
     main()
