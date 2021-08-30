@@ -22,6 +22,7 @@ void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, uint32_t batteryE
         : calculateInitialSoC(batteryVoltage);
 
     _x[0] = _previousSoC;
+    printf("The SoC Caculated by EKF init%d\n",_x[0]);
     diagonalMatrix(_pval, _pPost);   // identity(n) * pval
     diagonalMatrix(_qval, _q);       // identity(n) * qval
     diagonalMatrix(1.0, _a);         // identity
@@ -38,17 +39,30 @@ uint32_t SoCKalman::efficiency()
     return _batteryEff;
 }
 
-void SoCKalman::f(bool isBatteryInFloat, int32_t batteryMilliWatts, uint32_t samplePeriodMilliSec, uint32_t batteryCapacity)
+void SoCKalman::f(bool isBatteryInFloat, float batteryMilliWatts, float samplePeriodMilliSec, uint32_t batteryCapacity)
 {
     uint32_t milliSecToHours = 3600000;
-    int32_t powerChange = ((batteryMilliWatts / 1000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours));   // scaling should be fine here
-    uint32_t newSoC = (_x[0] * batteryCapacity + powerChange) / batteryCapacity;                                   // scaling should be fine here
+    printf("batteryCapacity in Wh: %d\n\n",batteryCapacity);
+    printf("batteryMilliWatts in mW: %d\n",batteryMilliWatts);
+    printf("_batteryEff: %d\n",_batteryEff);
+    printf("samplePeriodMilliSec in ms: %d\n",samplePeriodMilliSec);
+    printf("milliSecToHours: %d\n",milliSecToHours);
+    printf("Period in hours: %d\n",(samplePeriodMilliSec / milliSecToHours));
+    printf("Power in  W: %d\n\n",(batteryMilliWatts / 1000));
 
+    
+    float energyChange = (batteryMilliWatts / 1000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours);
+    printf("energyChange in Wh: %f\n",energyChange);
+    int32_t powerChange = ((batteryMilliWatts / 1000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours));   // scaling should be fine here
+    printf("energyChange in Wh: %d\n",powerChange);
+    uint32_t newSoC = (_x[0] * batteryCapacity + powerChange) / batteryCapacity;                                   // scaling should be fine here
+    
     _x[0] = newSoC;
 
     if (isBatteryInFloat) {
         _millisecondsInFloat += samplePeriodMilliSec;
         if (_millisecondsInFloat > _floatResetDuration) {
+             printf("Battery 100Procend cause of InFloat %d\n");
             _batteryEff = (uint64_t)_batteryEff * (uint64_t)SOC_SCALED_HUNDRED_PERCENT / _previousSoC;
             _batteryEff = clamp(_batteryEff, 0, SOC_SCALED_HUNDRED_PERCENT);
             _x[0] = SOC_SCALED_HUNDRED_PERCENT;
@@ -77,9 +91,11 @@ void SoCKalman::h(int32_t batteryMilliAmps)
     } else {
         multiplier = 2;
     }
-
+      
     for (i = 0; i < 101; i++) {
+        
         if (dummyOcvSoc[i] > (uint32_t)_x[0]) {
+            printf("inside the  for loop of h math function");
             if (_isBatteryLithium) {
                 _h = (dummyLithiumVoltage[i] + dummyLithiumVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;   // units should be good here
                 printf(" predicted voltage _h: %d\n",_h);

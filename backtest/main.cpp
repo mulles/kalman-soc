@@ -189,6 +189,12 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
         if (lineIdx == 0) {
             // use battery voltage to initialize kalman filter
             uint32_t batteryVoltage = result.at(3).second.back();
+            printf("Parameter the EKF is init: \n BatteryEfficiey: %d\n",batteryEff);
+            printf(" IntialSoC: %d\n",initialSoC);
+            printf(" BatteryCapacityWattHour: %d\n",batteryCapacityWattHour);
+            printf(" isBatteryLithium?: %d\n",isBatteryLithium);
+            printf(" isBattery12V?: %d\n",isBattery12V);
+            printf(" BatteryVoltage in mV: %d\n",batteryVoltage);
             kalman.init(isBattery12V, isBatteryLithium, batteryEff, batteryVoltage, initialSoC);
             uint32_t soc = kalman.read();
             result.at(colIdx).second.push_back(soc);

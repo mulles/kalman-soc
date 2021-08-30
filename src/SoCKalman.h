@@ -83,7 +83,7 @@ class SoCKalman
      * 
      * @param isBatteryinFloat, batteryMilliWatts, samplePeridoMilliSec, batteryCapacity
      */
-    void f(bool isBatteryInFloat, int32_t batteryMilliWatts, uint32_t samplePeriodMilliSec, uint32_t batteryCapacity);
+    void f(bool isBatteryInFloat, float batteryMilliWatts, float samplePeriodMilliSec, uint32_t batteryCapacity);
 
     /**
      * @brief predict the measurable value (voltage) ahead one step using the newly estimated state of charge
