@@ -116,8 +116,8 @@ def visualiseProcessedSensorData(queryStart,queryStop):
 def main():
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("--start", dest="queryStart", help = "Query start at either in -97d or in 2021-05-28T20:10:00.000Z(default)  format", default = "2021-05-05T16:11:00.000Z")
-  parser.add_argument("--stop" , dest="queryStop", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z(default)  format", default = "2021-05-29T00:19:00.000Z")
+  parser.add_argument("--start", dest="queryStart", help = "Query start at either in -97d or in 2021-05-28T20:10:00.000Z(default)  format", default = "2021-05-28T20:10:00.000Z")
+  parser.add_argument("--stop" , dest="queryStop", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z(default)  format", default = "2021-05-29T02:19:00.000Z")
   args = parser.parse_args()
   queryStart = args.queryStart
   queryStop  = args.queryStop
@@ -127,6 +127,7 @@ def main():
     structDataFrameQuery(queryStart,queryStop)
     runCppBacktest()
   #unzipDataset(queryStart,queryStop)
+  runCppBacktest()
   visualiseProcessedSensorData(queryStart,queryStop)
   #zipDataset(queryStart,queryStop)
 if __name__ == "__main__":

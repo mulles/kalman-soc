@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <iostream> 
 #include <utility> // std::pair
 #include <stdexcept> // std::runtime_error
 #include <sstream> // std::stringstream
@@ -61,7 +62,6 @@ std::pair<int, int> read_node_data(std::string filename){
     // Declare helper vars
     std::string line, colname;
     int val;
-
     if(myFile.good())
     {
         // Extract the first line in the file
@@ -69,10 +69,11 @@ std::pair<int, int> read_node_data(std::string filename){
 
         // Skip and extract the second line in the file to get the values
         std::getline(myFile, line);
+  
 
         // Create a stringstream from the line
         std::stringstream ss(line);
-        
+ 
         // Keep track of colIdx
         int colIdx = 0;
 
@@ -80,7 +81,6 @@ std::pair<int, int> read_node_data(std::string filename){
         while(ss >> val){
             // Add the current integer to the result pair
 
-            
             if (colIdx == 0) {
                 result.first = val;
             } else {
@@ -91,6 +91,8 @@ std::pair<int, int> read_node_data(std::string filename){
             if(ss.peek() == ',') ss.ignore();
 
             colIdx ++;
+            
+
         }
         
         return result;
@@ -110,11 +112,15 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
 
     bool isBatteryLithium = (bool)batteryInfo.first;
     bool isBattery12V = (batteryInfo.second == 12) ? true : false;
-
+    
     uint32_t batteryEff = 85000;
     uint32_t initialSoC = 0xFFFFFFFF;
-    uint32_t batteryCapacityWattHour = 1200;
-
+    uint32_t batteryCapacityWattHour = 12*12; //default 1200Wh. now 12Ah*12V=144Wh
+    printf("Parameter set: \n BatteryEfficiey: %d\n",batteryEff);
+    printf(" IntialSoC: %d\n",initialSoC);
+    printf(" BatteryCapacityWattHour: %d\n",batteryCapacityWattHour);
+    printf(" isBatteryLithium?: %d\n",isBatteryLithium);
+    printf(" isBattery12V?: %d\n",isBattery12V);
     // Create a vector of <string, int vector> pairs to store the result
     std::vector<std::pair<std::string, std::vector<int> > > result;
 
@@ -200,7 +206,7 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
         lineIdx++;
     }
 
-    // Close file
+    // Close file: %B\n",isBatteryLithium
     myFile.close();
 
     return result;

@@ -1,4 +1,5 @@
 #include "SoCKalman.h"
+#include <stdio.h>
 
 SoCKalman::SoCKalman() :
     _previousSoC(0),
@@ -81,9 +82,11 @@ void SoCKalman::h(int32_t batteryMilliAmps)
         if (dummyOcvSoc[i] > (uint32_t)_x[0]) {
             if (_isBatteryLithium) {
                 _h = (dummyLithiumVoltage[i] + dummyLithiumVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;   // units should be good here
+                printf(" predicted voltage _h: %d\n",_h);
                 _H[0] = (dummyLithiumVoltage[i] - dummyLithiumVoltage[i - 1]) * multiplier * 100 / (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);              // units are good here
             } else {
                 _h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;
+                printf(" predicted voltage _h: %d\n",_h);
                 _H[0] = (dummyLeadAcidVoltage[i] - dummyLeadAcidVoltage[i - 1]) * multiplier * 100 / (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);
             }
             _H[1] = batteryMilliAmps / 1000;   // should be good in Amps
@@ -125,6 +128,7 @@ void SoCKalman::sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t
 
     // $\hat{x}_k = \hat{x_k} + G_k(z_k - h(\hat{x}_k))$
     temp5 = batteryVoltage - _h;
+    printf("batteryVoltage - _h: %d\n",temp5);
     matMultConst(_G, temp5, temp3, _n * _m);
     updateState(temp3, _n * _m);
     _x[0] = clamp((uint32_t)_x[0], 0, SOC_SCALED_HUNDRED_PERCENT);
