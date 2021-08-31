@@ -61,7 +61,7 @@ def queryDfFromInfluxDb(queryStart,queryStop):
 
   client.close()
 
-def structDataFrameQuery(queryStart,queryStop):
+def structDataFrameInfluxDbQuery(queryStart,queryStop):
 
   dfQuery = pd.read_csv(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
   dfRawSensorData = dfQuery.pivot(index = '_time',columns = '_field', values='_value').reset_index()
@@ -80,12 +80,34 @@ def structDataFrameQuery(queryStart,queryStop):
 
   dfRawSensorData.to_csv(outputDataDir + queryStart + queryStop + '_raw_sensor_data.csv',index=False)
   dfRawSensorData.to_csv(outputDataDir + 'raw_sensor_data.csv',index=False)
+
+
+def structDataFrameVictoriaMQuery(device,queryStart,queryStop):
+  
+  dfQuery = pd.read_csv(outputDataDir + device  + '_' + queryStart + '-' + queryStop + '.csv')
+  print(dfQuery)
+
+  dfRawSensorData = dfQuery[['ChgState','Bat_V','Time_s','SOC_pct','Load_W','Solar_W','Grid_W']].copy() # reorder column to:
+  #batteryMilliAmps,	batteryMilliWatts,	isBatteryInFloat,	 batteryVoltage,	samplePeriodMilliSec	 timestamp
+  #dfRawSensorData["Bat_A"] = dfRawSensorData["Bat_A"] * toMilli
+  dfRawSensorData.loc[:, "Bat_V"] = dfRawSensorData["Bat_V"] * toMilli
+  dfRawSensorData.insert(0, "batteryMilliWatts",-( dfRawSensorData['Load_W'] + dfRawSensorData['Grid_W'] + dfRawSensorData['Solar_W'])*toMilli, True)
+  dfRawSensorData.insert(1, "Bat_A", dfRawSensorData["batteryMilliWatts"] / dfRawSensorData["Bat_V"] *1000 , True)
+  dfRawSensorData.insert(4, "samplePeriodMilliSec", '300000' , True)
+  dfRawSensorData = dfRawSensorData.rename(columns={"Bat_A": "batteryMilliAmps", "batteryMilliWatts": "batteryMilliWatts","ChgState": "isBatteryInFloat", "Bat_V": "batteryVoltage", "samplePeriodMilliSec" : "samplePeriodMilliSec", "Time_s": "timestamp"})
+  dfRawSensorData = dfRawSensorData.astype({'batteryMilliAmps' : 'int32',	'batteryMilliWatts' : 'int32','isBatteryInFloat': 'int32',	 'batteryVoltage': 'int32',	'samplePeriodMilliSec': 'int32'})
+  #print(dfRawSensorData)
+  #print(dfRawSensorData.info())
+
+  dfRawSensorData.to_csv(outputDataDir + device + '_raw_sensor_data.csv',index=False)
+  dfRawSensorData.to_csv(outputDataDir + 'raw_sensor_data.csv',index=False)
+
   
 def runCppBacktest():
   subprocess.run("./backtest",cwd = buildDir)
 
 
-def visualiseProcessedSensorData(queryStart,queryStop):
+def visualiseProcessedSensorData(device, queryStart,queryStop):
 
   dfProcessedSensorData = pd.read_csv(outputDataDir + 'processed_sensor_data.csv')
   dfRawSensorData = pd.read_csv(outputDataDir + 'raw_sensor_data.csv')
@@ -98,7 +120,7 @@ def visualiseProcessedSensorData(queryStart,queryStop):
   dfProcessedSensorDataEnhanced["batteryMilliAmps"] =  dfProcessedSensorDataEnhanced["batteryMilliAmps"] / 1000 
   dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] =  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] / 1000 
 
-  dfProcessedSensorDataEnhanced.to_csv(outputDataDir + queryStart + queryStop + '_enhanced_processed_sensor_data.csv',index=False)
+  dfProcessedSensorDataEnhanced.to_csv(outputDataDir + device + '_' + queryStart + queryStop + '_enhanced_processed_sensor_data.csv',index=False)
   
   #Matplotlib
   #dfProcessedSensorDataEnhanced.plot()
@@ -116,19 +138,22 @@ def visualiseProcessedSensorData(queryStart,queryStop):
 def main():
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("--start", dest="queryStart", help = "Query start at either in -97d or in 2021-05-28T20:10:00.000Z(default)  format", default = "2021-05-28T20:10:00.000Z")
-  parser.add_argument("--stop" , dest="queryStop", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z(default)  format", default = "2021-05-29T02:19:00.000Z")
+  parser.add_argument("--start", dest="queryStart", help = "Query start at either in -97d or in 2021-05-28T20:10:00.000Z(default)  format", default = "20210817")
+  parser.add_argument("--stop" , dest="queryStop", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z(default)  format", default = "20210830")
+  parser.add_argument("--device" , dest="device", help =  "Query stops at either in -95d or in 2021-05-29T02:19:00.000Z(default)  format", default = "EVLKpN")
   args = parser.parse_args()
   queryStart = args.queryStart
   queryStop  = args.queryStop
+  device = args.device
   existInfluxDbDataQueryFile = os.path.isfile(outputDataDir + queryStart + queryStop + '_dbquery_raw_sensor_data.csv')
-  if not existInfluxDbDataQueryFile:
-    queryDfFromInfluxDb(queryStart,queryStop)
-    structDataFrameQuery(queryStart,queryStop)
-    runCppBacktest()
+  # if not existInfluxDbDataQueryFile:
+  #   queryDfFromInfluxDb(queryStart,queryStop)
+  #   structDataFrameInfluxDbQuery(queryStart,queryStop)
+  #   runCppBacktest()
   #unzipDataset(queryStart,queryStop)
+  structDataFrameVictoriaMQuery(device,queryStart,queryStop)
   runCppBacktest()
-  visualiseProcessedSensorData(queryStart,queryStop)
+  visualiseProcessedSensorData(device, queryStart,queryStop)
   #zipDataset(queryStart,queryStop)
 if __name__ == "__main__":
     main()

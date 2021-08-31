@@ -115,7 +115,7 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
     
     uint32_t batteryEff = 85000;
     uint32_t initialSoC = 0xFFFFFFFF;
-    uint32_t batteryCapacityWattHour = 12*12; //default 1200Wh. now 12Ah*12V=144Wh
+    uint32_t batteryCapacityWattHour = 12*17; //default 1200Wh. now 12Ah*12V=144Wh, emblem 17Ah 
     printf("Parameter set: \n BatteryEfficiey: %d\n",batteryEff);
     printf(" IntialSoC: %d\n",initialSoC);
     printf(" BatteryCapacityWattHour: %d\n",batteryCapacityWattHour);
@@ -230,7 +230,7 @@ int main() {
     // Write to another file to check that this was successful
     write_csv(OUTPUT_FILEPATH, result);
 
-    printf("Finished writing.\n");
+    printf("Finished writing.\n");  
     
     return 0;
 }
