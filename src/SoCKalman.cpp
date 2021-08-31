@@ -39,19 +39,19 @@ uint32_t SoCKalman::efficiency()
     return _batteryEff;
 }
 
-void SoCKalman::f(bool isBatteryInFloat, float batteryMilliWatts, float samplePeriodMilliSec, uint32_t batteryCapacity)
+void SoCKalman::f(bool isBatteryInFloat, float batteryMilliAmps, float samplePeriodMilliSec, float batteryCapacity)
 {
     uint32_t milliSecToHours = 3600000;
-    printf("Inside function f: \n batteryMilliWatts in mW: %f\n",batteryMilliWatts);
-    printf(" Power in  W: %f\n",(batteryMilliWatts / 1000));
+    printf("Inside function f: \n batteryMilliWatts in mW: %f\n",batteryMilliAmps);
+    printf(" Power in  W: %f\n",(batteryMilliAmps / 1000));
     printf(" samplePeriodMilliSec in ms: %f\n",samplePeriodMilliSec);
     printf(" Period in hours: %f\n",(samplePeriodMilliSec / milliSecToHours));
     
-    float powerChange = (batteryMilliWatts / 1000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours);
-    printf(" energyChange in Wh: %f\n",powerChange);
+    float powerChange = (batteryMilliAmps / 1000000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours);
+    printf(" powerChange in Wh: %f\n",powerChange);
     //int32_t powerChange = ((batteryMilliWatts / 1000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours));   // scaling should be fine here
     //printf("energyChange in Wh: %d\n",powerChange);
-    uint32_t newSoC = (_x[0] * batteryCapacity + powerChange) / batteryCapacity;                                   // scaling should be fine here
+    uint32_t newSoC = (_x[0] * (batteryCapacity/12) + powerChange) / (batteryCapacity/12);                                   // scaling should be fine here
     _x[0] = newSoC;
     printf(" SoC: %d\n",_x[0]);
 
@@ -126,7 +126,7 @@ void SoCKalman::sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t
     float temp5;
 
     // $\hat{x}_k = f(\hat{x}_{k-1})$
-    f(isBatteryInFloat, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity);
+    f(isBatteryInFloat, batteryMilliAmps, samplePeriodMilliSec, batteryCapacity);
 
     // $P_k = A_{k-1} P_{k-1} A^T_{k-1} + Q_{k-1}$ -- updates _pPre
     matMult(_a, _pPost, temp0, _n, _n, _n);
