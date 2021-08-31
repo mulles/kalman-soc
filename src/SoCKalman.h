@@ -90,7 +90,7 @@ class SoCKalman
      * 
      * @param isBatteryLithium, batteryMilliAmps
      */
-    void h(int32_t batteryMilliAmps);
+    void h(float batteryMilliAmps);
 
     void diagonalMatrix(float value, float* result);
 

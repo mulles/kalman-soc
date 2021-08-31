@@ -120,7 +120,8 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
     printf(" IntialSoC: %d\n",initialSoC);
     printf(" BatteryCapacityWattHour: %d\n",batteryCapacityWattHour);
     printf(" isBatteryLithium?: %d\n",isBatteryLithium);
-    printf(" isBattery12V?: %d\n",isBattery12V);
+    printf(" isBattery12V?: %d\n\n",isBattery12V);
+    
     // Create a vector of <string, int vector> pairs to store the result
     std::vector<std::pair<std::string, std::vector<int> > > result;
 
@@ -194,12 +195,13 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
             printf(" BatteryCapacityWattHour: %d\n",batteryCapacityWattHour);
             printf(" isBatteryLithium?: %d\n",isBatteryLithium);
             printf(" isBattery12V?: %d\n",isBattery12V);
-            printf(" BatteryVoltage in mV: %d\n",batteryVoltage);
+            printf(" BatteryVoltage in mV: %d\n\n",batteryVoltage);
             kalman.init(isBattery12V, isBatteryLithium, batteryEff, batteryVoltage, initialSoC);
             uint32_t soc = kalman.read();
             result.at(colIdx).second.push_back(soc);
         } else {
             // use sensor data to do a sample with the kalman filter
+            printf("\n\nTimeStep: %d\n\n",lineIdx+2);
             bool isBatteryInFloat = (result.at(2).second.back() == 3);
             int32_t batteryMilliAmps = result.at(0).second.back();
             uint32_t batteryVoltage = result.at(3).second.back();
