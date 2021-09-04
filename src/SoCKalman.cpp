@@ -10,7 +10,7 @@ SoCKalman::SoCKalman() :
 
 {}
 
-void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, uint32_t batteryEff, uint32_t batteryVoltage, uint32_t initialSoC)
+void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, float batteryEff, uint32_t batteryVoltage, uint32_t initialSoC)
 {
     _batteryEff = batteryEff;
     _isBattery12V = isBattery12V;
@@ -22,7 +22,6 @@ void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, uint32_t batteryE
         : calculateInitialSoC(batteryVoltage);
 
     _x[0] = _previousSoC;
-    printf("The SoC Caculated by EKF init: %d\n\n",_x[0]);
     diagonalMatrix(_pval, _pPost);   // identity(n) * pval
     diagonalMatrix(_qval, _q);       // identity(n) * qval
     diagonalMatrix(1.0, _a);         // identity
@@ -34,7 +33,7 @@ uint32_t SoCKalman::read()
     return clamp(_previousSoC, 0, SOC_SCALED_HUNDRED_PERCENT);
 }
 
-uint32_t SoCKalman::efficiency()
+float SoCKalman::efficiency()
 {
     return _batteryEff;
 }
@@ -42,18 +41,19 @@ uint32_t SoCKalman::efficiency()
 void SoCKalman::f(bool isBatteryInFloat, float batteryMilliAmps, float samplePeriodMilliSec, float batteryCapacity)
 {
     uint32_t milliSecToHours = 3600000;
-    printf("Inside function f: \n batteryMilliWatts in mW: %f\n",batteryMilliAmps);
-    printf(" Power in  W: %f\n",(batteryMilliAmps / 1000));
-    printf(" samplePeriodMilliSec in ms: %f\n",samplePeriodMilliSec);
-    printf(" Period in hours: %f\n",(samplePeriodMilliSec / milliSecToHours));
-    
-    float powerChange = (batteryMilliAmps / 1000000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours);
-    printf(" powerChange in Wh: %f\n",powerChange);
+    printf("Inside function f: \n");
+    printf(" Current in A : %f\n",(batteryMilliAmps / 1000));
+    printf(" samplePeriod in min: %f\n",samplePeriodMilliSec/milliSecToHours);
+    printf(" _batteryEff: %f\n",_batteryEff);
+    printf(" chargeChange=  %f  * %f * %f\n",batteryMilliAmps/1000, _batteryEff/100000,samplePeriodMilliSec/milliSecToHours);
+    float chargeChange = (batteryMilliAmps / 1000) * _batteryEff/100000 * (samplePeriodMilliSec / milliSecToHours);
+    printf(" chargeChange in mAh: %f\n",chargeChange*1000);
+    printf(" Previous SoC: %f \n",_x[0]/100000);
     //int32_t powerChange = ((batteryMilliWatts / 1000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours));   // scaling should be fine here
-    //printf("energyChange in Wh: %d\n",powerChange);
-    uint32_t newSoC = (_x[0] * (batteryCapacity/12) + powerChange) / (batteryCapacity/12);                                   // scaling should be fine here
+    printf(" newSoC = ( %f  + %f ) / %f  \n",_x[0] * batteryCapacity, chargeChange *1000 ,batteryCapacity);
+    float newSoC = (_x[0] * batteryCapacity + chargeChange *1000) / batteryCapacity;                                   // scaling should be fine here
     _x[0] = newSoC;
-    printf(" SoC: %d\n",_x[0]);
+    printf(" New SoC: %f\n",_x[0]/100000);
 
     if (isBatteryInFloat) {
         _millisecondsInFloat += samplePeriodMilliSec;
@@ -64,7 +64,7 @@ void SoCKalman::f(bool isBatteryInFloat, float batteryMilliAmps, float samplePer
             _batteryEff = clamp(_batteryEff, 0, SOC_SCALED_HUNDRED_PERCENT);
 
             _x[0] = SOC_SCALED_HUNDRED_PERCENT;
-            printf(" SoC %d cause InFloat for 10min\n",_x[0]);
+            printf(" SoC %f cause InFloat for 10min\n",_x[0]/100000);
         }
     } else {
         _millisecondsInFloat = 0;
@@ -78,13 +78,13 @@ void SoCKalman::h(float batteryMilliAmps)
     // _H is an array of form [ocv gradient, measured current, 1] (the last parameter is the offset)
     // x_[0] = SOC, _x[1] = R
 
-    uint32_t dummyLeadAcidVoltage[101] = { 11640, 11653, 11666, 11679, 11692, 11706, 11719, 11732, 11745, 11758, 11772, 11785, 11798, 11811, 11824, 11838, 11851, 11864, 11877, 11890, 11904, 11917, 11930, 11943, 11956, 11970, 11983, 11996, 12009, 12022, 12036, 12049, 12062, 12075, 12088, 12102, 12115, 12128, 12141, 12154, 12168, 12181, 12194, 12207, 12220, 12234, 12247, 12260, 12273, 12286, 12300, 12313, 12326, 12339, 12352, 12366, 12379, 12392, 12405, 12418, 12432, 12445, 12458, 12471, 12484, 12498, 12511, 12524, 12537, 12550, 12564, 12577, 12590, 12603, 12616, 12630, 12643, 12656, 12669, 12682, 12696, 12709, 12722, 12735, 12748, 12762, 12775, 12788, 12801, 12814, 12828, 12841, 12854, 12867, 12880, 12894, 12907, 12920, 12933, 12946, 12960 };
-    uint32_t dummyLithiumVoltage[101] = { 5000, 6266, 7434, 8085, 8531, 8867, 9134, 9355, 9543, 9705, 9847, 9974, 10088, 10191, 10285, 10372, 10451, 10525, 10595, 10659, 10720, 10777, 10831, 10882, 10931, 10977, 11021, 11063, 11104, 11142, 11180, 11216, 11251, 11284, 11317, 11349, 11379, 11409, 11438, 11467, 11495, 11522, 11548, 11574, 11600, 11625, 11650, 11675, 11699, 11723, 11746, 11769, 11793, 11815, 11838, 11861, 11883, 11906, 11928, 11950, 11972, 11994, 12017, 12039, 12061, 12083, 12105, 12127, 12150, 12172, 12195, 12217, 12240, 12263, 12286, 12309, 12333, 12356, 12380, 12404, 12428, 12452, 12477, 12501, 12526, 12552, 12577, 12603, 12629, 12655, 12682, 12708, 12735, 12763, 12790, 12818, 12846, 12875, 12903, 12931, 12960 };
-    uint32_t dummyOcvSoc[101] = { 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000, 31000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 49000, 50000, 51000, 52000, 53000, 54000, 55000, 56000, 57000, 58000, 59000, 60000, 61000, 62000, 63000, 64000, 65000, 66000, 67000, 68000, 69000, 70000, 71000, 72000, 73000, 74000, 75000, 76000, 77000, 78000, 79000, 80000, 81000, 82000, 83000, 84000, 85000, 86000, 87000, 88000, 89000, 90000, 91000, 92000, 93000, 94000, 95000, 96000, 97000, 98000, 99000, 100000 };
+    float dummyLeadAcidVoltage[101] = { 11640, 11653, 11666, 11679, 11692, 11706, 11719, 11732, 11745, 11758, 11772, 11785, 11798, 11811, 11824, 11838, 11851, 11864, 11877, 11890, 11904, 11917, 11930, 11943, 11956, 11970, 11983, 11996, 12009, 12022, 12036, 12049, 12062, 12075, 12088, 12102, 12115, 12128, 12141, 12154, 12168, 12181, 12194, 12207, 12220, 12234, 12247, 12260, 12273, 12286, 12300, 12313, 12326, 12339, 12352, 12366, 12379, 12392, 12405, 12418, 12432, 12445, 12458, 12471, 12484, 12498, 12511, 12524, 12537, 12550, 12564, 12577, 12590, 12603, 12616, 12630, 12643, 12656, 12669, 12682, 12696, 12709, 12722, 12735, 12748, 12762, 12775, 12788, 12801, 12814, 12828, 12841, 12854, 12867, 12880, 12894, 12907, 12920, 12933, 12946, 12960 };
+    float dummyLithiumVoltage[101] = { 5000, 6266, 7434, 8085, 8531, 8867, 9134, 9355, 9543, 9705, 9847, 9974, 10088, 10191, 10285, 10372, 10451, 10525, 10595, 10659, 10720, 10777, 10831, 10882, 10931, 10977, 11021, 11063, 11104, 11142, 11180, 11216, 11251, 11284, 11317, 11349, 11379, 11409, 11438, 11467, 11495, 11522, 11548, 11574, 11600, 11625, 11650, 11675, 11699, 11723, 11746, 11769, 11793, 11815, 11838, 11861, 11883, 11906, 11928, 11950, 11972, 11994, 12017, 12039, 12061, 12083, 12105, 12127, 12150, 12172, 12195, 12217, 12240, 12263, 12286, 12309, 12333, 12356, 12380, 12404, 12428, 12452, 12477, 12501, 12526, 12552, 12577, 12603, 12629, 12655, 12682, 12708, 12735, 12763, 12790, 12818, 12846, 12875, 12903, 12931, 12960 };
+    float dummyOcvSoc[101] = { 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000, 21000, 22000, 23000, 24000, 25000, 26000, 27000, 28000, 29000, 30000, 31000, 32000, 33000, 34000, 35000, 36000, 37000, 38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, 46000, 47000, 48000, 49000, 50000, 51000, 52000, 53000, 54000, 55000, 56000, 57000, 58000, 59000, 60000, 61000, 62000, 63000, 64000, 65000, 66000, 67000, 68000, 69000, 70000, 71000, 72000, 73000, 74000, 75000, 76000, 77000, 78000, 79000, 80000, 81000, 82000, 83000, 84000, 85000, 86000, 87000, 88000, 89000, 90000, 91000, 92000, 93000, 94000, 95000, 96000, 97000, 98000, 99000, 100000 };
 
     // update voltage closest to current state of charge as well as gradient
     int i;
-    uint16_t multiplier;
+    float multiplier;
 
     if (_isBattery12V) {
         multiplier = 1;
@@ -92,24 +92,27 @@ void SoCKalman::h(float batteryMilliAmps)
         multiplier = 2;
     }
     printf("Inside h function: \n");
-    printf(" batteryMilliAmps in mA: %d\n",batteryMilliAmps);
+    printf(" batteryMilliAmps in mA: %f\n",batteryMilliAmps);
 
     for (i = 0; i < 101; i++) {
         
-        if (dummyOcvSoc[i] > (uint32_t)_x[0]) {
+        if (dummyOcvSoc[i] > (float)_x[0]) {
             if (_isBatteryLithium) {
                 _h = (dummyLithiumVoltage[i] + dummyLithiumVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;   // units should be good here
                 printf(" predicted LiBat-voltage _h: %f\n",_h);
                 _H[0] = (dummyLithiumVoltage[i] - dummyLithiumVoltage[i - 1]) * multiplier * 100 / (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);              // units are good here
             } else {
-                printf("_h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) / 2 + (batteryMilliAmps * _x[1] / 100) + _x[2] / 100\n");
-                printf("_h = (%d) + (%f * %d / 100) + %d / 100\n",(dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1])/2, batteryMilliAmps/1000, _x[1], _x[2]);
+                printf(" _h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) / 2 + (batteryMilliAmps * _x[1] / 100) + _x[2] / 100\n");
+                printf(" _h = (%d) + (%f * %f / 100) + %f / 100\n",(dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1])/2, batteryMilliAmps/1000, _x[1], _x[2]);
                 _h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;
-                printf(" predicted LeadBat-voltage _h: %f\n",_h);
+                printf(" predicted LeadBatVoltage _h: %f\n",_h);
                 _H[0] = (dummyLeadAcidVoltage[i] - dummyLeadAcidVoltage[i - 1]) * multiplier * 100 / (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);
+                printf("( _H[0] = (%f - %f) * %f * 100 / (%f - %f)\n",dummyLeadAcidVoltage[i],dummyLeadAcidVoltage[i - 1], multiplier,dummyOcvSoc[i], dummyOcvSoc[i - 1]);
+                
             }
             _H[1] = batteryMilliAmps / 1000;   // should be good in Amps
             _H[2] = 1;                         // offset
+            printf(" _H=[ocv gradient, measured current, 1] = [%f,%f,%f] \n",_H[0],_H[1],_H[2]);
             return;
         }
     }

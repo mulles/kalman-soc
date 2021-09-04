@@ -18,7 +18,7 @@ class SoCKalman
      *
      * @param batteryEff, batteryVoltage, initialSoC (optional)
      */
-    void init(bool isBattery12V, bool isBatteryLithium, uint32_t batteryEff, uint32_t batteryVoltage, uint32_t initialSoC);
+    void init(bool isBattery12V, bool isBatteryLithium, float batteryEff, uint32_t batteryVoltage, uint32_t initialSoC);
 
     /**
      * @brief return current state of charge
@@ -32,7 +32,7 @@ class SoCKalman
      *
      * @return uint32_t _batteryEff
      */
-    uint32_t efficiency();
+    float efficiency();
 
     /**
      * @brief calculate new soc based on how much power entered/exited the battery in a given
@@ -46,7 +46,7 @@ class SoCKalman
 
   private:
     uint32_t _previousSoC;
-    uint32_t _batteryEff;
+    float _batteryEff;
     float _pval;
     float _qval;
     float _rval;
@@ -63,7 +63,7 @@ class SoCKalman
     bool _isBatteryLithium;
     uint32_t _millisecondsInFloat = 0;
     uint32_t _floatResetDuration = 600000;  // 10 minutes in milliseconds
-    int32_t _x[3] = { 0, 0, 0 };
+    float _x[3] = { 0, 0, 0 };
     uint8_t _n = 3;
     uint8_t _m = 1;
     const uint32_t SOC_SCALED_HUNDRED_PERCENT = 100000;  // 100% charge = 100000

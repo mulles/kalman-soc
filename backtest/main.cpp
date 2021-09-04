@@ -115,10 +115,10 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
     
     uint32_t batteryEff = 85000;
     uint32_t initialSoC = 0xFFFFFFFF;
-    uint32_t batteryCapacityWattHour = 12*17; //default 1200Wh. now 12Ah*12V=144Wh, emblem 17Ah 
-    printf("Parameter set: \n BatteryEfficiey: %d\n",batteryEff);
+    uint32_t batteryCapacityAh = 17; //default 1200Wh. now 12Ah*12V=144Wh, emblem 17Ah 
+    printf("Parameter set: \n BatteryEfficiency: %d\n",batteryEff);
     printf(" IntialSoC: %d\n",initialSoC);
-    printf(" BatteryCapacityWattHour: %d\n",batteryCapacityWattHour);
+    printf(" batteryCapacityAh: %d\n",batteryCapacityAh);
     printf(" isBatteryLithium?: %d\n",isBatteryLithium);
     printf(" isBattery12V?: %d\n\n",isBattery12V);
     
@@ -192,12 +192,14 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
             uint32_t batteryVoltage = result.at(3).second.back();
             printf("Parameter the EKF is init: \n BatteryEfficiey: %d\n",batteryEff);
             printf(" IntialSoC: %d\n",initialSoC);
-            printf(" BatteryCapacityWattHour: %d\n",batteryCapacityWattHour);
+            printf(" batteryCapacityAh: %d\n",batteryCapacityAh);
             printf(" isBatteryLithium?: %d\n",isBatteryLithium);
             printf(" isBattery12V?: %d\n",isBattery12V);
             printf(" BatteryVoltage in mV: %d\n\n",batteryVoltage);
             kalman.init(isBattery12V, isBatteryLithium, batteryEff, batteryVoltage, initialSoC);
             uint32_t soc = kalman.read();
+            printf("Effiency calcultated by EKF init %f\n\n",kalman.efficiency());
+            printf("The SoC Caculated by EKF init: %d\n\n",soc);
             result.at(colIdx).second.push_back(soc);
         } else {
             // use sensor data to do a sample with the kalman filter
@@ -207,7 +209,7 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
             uint32_t batteryVoltage = result.at(3).second.back();
             int32_t batteryMilliWatts = result.at(1).second.back();
             uint32_t samplePeriodMilliSec = result.at(4).second.back();
-            kalman.sample(isBatteryInFloat, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityWattHour);
+            kalman.sample(isBatteryInFloat, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityAh);
             uint32_t soc = kalman.read();
             result.at(colIdx).second.push_back(soc);
         }

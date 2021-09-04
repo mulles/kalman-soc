@@ -118,7 +118,7 @@ def visualiseProcessedSensorData(device, queryStart,queryStop):
   dfProcessedSensorDataEnhanced["batteryMilliWatts"] =  dfProcessedSensorDataEnhanced["batteryMilliWatts"] / 100000 
   dfProcessedSensorDataEnhanced["batteryVoltage"] =  dfProcessedSensorDataEnhanced["batteryVoltage"] / 1000 
   dfProcessedSensorDataEnhanced["batteryMilliAmps"] =  dfProcessedSensorDataEnhanced["batteryMilliAmps"] / 1000 
-  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] =  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] / 1000 
+  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] =  dfProcessedSensorDataEnhanced["samplePeriodMilliSec"] / 1000 /60  # 5 min 
 
   dfProcessedSensorDataEnhanced.to_csv(outputDataDir + device + '_' + queryStart + queryStop + '_enhanced_processed_sensor_data.csv',index=False)
   
@@ -151,7 +151,7 @@ def main():
   #   structDataFrameInfluxDbQuery(queryStart,queryStop)
   #   runCppBacktest()
   #unzipDataset(queryStart,queryStop)
-  structDataFrameVictoriaMQuery(device,queryStart,queryStop)
+  #structDataFrameVictoriaMQuery(device,queryStart,queryStop)
   runCppBacktest()
   visualiseProcessedSensorData(device, queryStart,queryStop)
   #zipDataset(queryStart,queryStop)
