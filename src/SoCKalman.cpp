@@ -10,7 +10,7 @@ SoCKalman::SoCKalman() :
 
 {}
 
-void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, float batteryEff, uint32_t batteryVoltage, uint32_t initialSoC)
+void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, float batteryEff, float batteryVoltage, float initialSoC)
 {
     _batteryEff = batteryEff;
     _isBattery12V = isBattery12V;
@@ -27,7 +27,7 @@ void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, float batteryEff,
     diagonalMatrix(1.0, _a);         // identity
 }
 
-uint32_t SoCKalman::read()
+float SoCKalman::read()
 {
     // do not excede 0-100% bounds
     return clamp(_previousSoC, 0, SOC_SCALED_HUNDRED_PERCENT);
@@ -40,7 +40,7 @@ float SoCKalman::efficiency()
 
 void SoCKalman::f(bool isBatteryInFloat, float batteryMilliAmps, float samplePeriodMilliSec, float batteryCapacity)
 {
-    uint32_t milliSecToHours = 3600000;
+    float milliSecToHours = 3600000;
     printf("Inside function f: \n");
     printf(" Current in A : %f\n",(batteryMilliAmps / 1000));
     printf(" samplePeriod in min: %f\n",samplePeriodMilliSec/milliSecToHours);
@@ -59,7 +59,7 @@ void SoCKalman::f(bool isBatteryInFloat, float batteryMilliAmps, float samplePer
         _millisecondsInFloat += samplePeriodMilliSec;
         if (_millisecondsInFloat > _floatResetDuration) {
              
-            _batteryEff = (uint64_t)_batteryEff * (uint64_t)SOC_SCALED_HUNDRED_PERCENT / _previousSoC;
+            _batteryEff = (float)_batteryEff * (float)SOC_SCALED_HUNDRED_PERCENT / _previousSoC;
             printf(" _batteryEff: %d\n",_batteryEff);
             _batteryEff = clamp(_batteryEff, 0, SOC_SCALED_HUNDRED_PERCENT);
 
@@ -118,8 +118,8 @@ void SoCKalman::h(float batteryMilliAmps)
     }
 }
 
-void SoCKalman::sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t batteryVoltage, int32_t batteryMilliWatts, uint32_t samplePeriodMilliSec,
-    uint32_t batteryCapacity)
+void SoCKalman::sample(bool isBatteryInFloat, float batteryMilliAmps, float batteryVoltage, float batteryMilliWatts, float samplePeriodMilliSec,
+    float batteryCapacity)
 {
     float temp0[_n * _n];
     float temp1[_n * _n];
@@ -154,7 +154,7 @@ void SoCKalman::sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t
     printf(" batteryVoltage - _h: %f\n\n",temp5);
     matMultConst(_G, temp5, temp3, _n * _m);
     updateState(temp3, _n * _m);
-    _x[0] = clamp((uint32_t)_x[0], 0, SOC_SCALED_HUNDRED_PERCENT);
+    _x[0] = clamp((float)_x[0], 0, SOC_SCALED_HUNDRED_PERCENT);
 
     // $P_k = (I - G_k H_k) P_k$
     matMult(_G, _H, temp0, _n, _m, _n);
@@ -166,12 +166,12 @@ void SoCKalman::sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t
     _previousSoC = _x[0];
 }
 
-uint32_t SoCKalman::calculateInitialSoC(uint32_t batteryVoltage)
+float SoCKalman::calculateInitialSoC(float batteryVoltage)
 {
     // will need to add 24 V compatability
 
     const uint8_t VOLTAGES_SIZE = 10;
-    const uint16_t battSoCVoltages[VOLTAGES_SIZE] = { 12720, 12600, 12480, 12360, 12240, 12120, 12000, 11880, 11760, 11640 };
+    const float battSoCVoltages[VOLTAGES_SIZE] = { 12720, 12600, 12480, 12360, 12240, 12120, 12000, 11880, 11760, 11640 };
 
     uint8_t index;
     for (index = 0; index < VOLTAGES_SIZE; index++)
@@ -280,7 +280,7 @@ uint8_t SoCKalman::inverse(float* a, float* result)
     return 0;
 }
 
-uint32_t SoCKalman::clamp(uint32_t value, uint32_t min, uint32_t max)
+float SoCKalman::clamp(float value, float min, float max)
 {
     if (value > max) {
         return max;

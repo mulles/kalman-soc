@@ -113,9 +113,9 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
     bool isBatteryLithium = (bool)batteryInfo.first;
     bool isBattery12V = (batteryInfo.second == 12) ? true : false;
     
-    uint32_t batteryEff = 85000;
-    uint32_t initialSoC = 0xFFFFFFFF;
-    uint32_t batteryCapacityAh = 17; //default 1200Wh. now 12Ah*12V=144Wh, emblem 17Ah 
+    float batteryEff = 85000;
+    float initialSoC = 0xFFFFFFFF;
+    float batteryCapacityAh = 17; //default 1200Wh. now 12Ah*12V=144Wh, emblem 17Ah 
     printf("Parameter set: \n BatteryEfficiency: %d\n",batteryEff);
     printf(" IntialSoC: %d\n",initialSoC);
     printf(" batteryCapacityAh: %d\n",batteryCapacityAh);
@@ -133,7 +133,7 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
 
     // Helper vars
     std::string line, colname;
-    int val;
+    float val;
 
     // Read the column names
     if(myFile.good())
@@ -189,7 +189,7 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
         }
         if (lineIdx == 0) {
             // use battery voltage to initialize kalman filter
-            uint32_t batteryVoltage = result.at(3).second.back();
+            float batteryVoltage = result.at(3).second.back();
             printf("Parameter the EKF is init: \n BatteryEfficiey: %d\n",batteryEff);
             printf(" IntialSoC: %d\n",initialSoC);
             printf(" batteryCapacityAh: %d\n",batteryCapacityAh);
@@ -197,7 +197,7 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
             printf(" isBattery12V?: %d\n",isBattery12V);
             printf(" BatteryVoltage in mV: %d\n\n",batteryVoltage);
             kalman.init(isBattery12V, isBatteryLithium, batteryEff, batteryVoltage, initialSoC);
-            uint32_t soc = kalman.read();
+            float soc = kalman.read();
             printf("Effiency calcultated by EKF init %f\n\n",kalman.efficiency());
             printf("The SoC Caculated by EKF init: %d\n\n",soc);
             result.at(colIdx).second.push_back(soc);
@@ -205,12 +205,12 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
             // use sensor data to do a sample with the kalman filter
             printf("\n\nTimeStep: %d\n\n",lineIdx+2);
             bool isBatteryInFloat = (result.at(2).second.back() == 3);
-            int32_t batteryMilliAmps = result.at(0).second.back();
-            uint32_t batteryVoltage = result.at(3).second.back();
-            int32_t batteryMilliWatts = result.at(1).second.back();
-            uint32_t samplePeriodMilliSec = result.at(4).second.back();
+            float batteryMilliAmps = result.at(0).second.back();
+            float batteryVoltage = result.at(3).second.back();
+            float batteryMilliWatts = result.at(1).second.back();
+            float samplePeriodMilliSec = result.at(4).second.back();
             kalman.sample(isBatteryInFloat, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacityAh);
-            uint32_t soc = kalman.read();
+            float soc = kalman.read();
             result.at(colIdx).second.push_back(soc);
         }
         lineIdx++;

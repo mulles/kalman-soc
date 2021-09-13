@@ -18,19 +18,19 @@ class SoCKalman
      *
      * @param batteryEff, batteryVoltage, initialSoC (optional)
      */
-    void init(bool isBattery12V, bool isBatteryLithium, float batteryEff, uint32_t batteryVoltage, uint32_t initialSoC);
+    void init(bool isBattery12V, bool isBatteryLithium, float batteryEff, float batteryVoltage, float initialSoC);
 
     /**
      * @brief return current state of charge
      *
-     * @return uint32_t soc
+     * @return float soc
      */
-    uint32_t read();
+    float read();
 
     /**
      * @brief return current battery efficiency
      *
-     * @return uint32_t _batteryEff
+     * @return float _batteryEff
      */
     float efficiency();
 
@@ -41,11 +41,11 @@ class SoCKalman
      *
      * @param isBatteryInFloat, isBatteryLithium, batteryMilliAmps, batteryVoltage, batteryMilliWatts, samplePeriodMilliSec, batteryCapacity
      */
-    void sample(bool isBatteryInFloat, int32_t batteryMilliAmps, uint32_t batteryVoltage, int32_t batteryMilliWatts, uint32_t samplePeriodMilliSec,
-        uint32_t batteryCapacity);
+    void sample(bool isBatteryInFloat, float batteryMilliAmps, float batteryVoltage, float batteryMilliWatts, float samplePeriodMilliSec,
+        float batteryCapacity);
 
   private:
-    uint32_t _previousSoC;
+    float _previousSoC;
     float _batteryEff;
     float _pval;
     float _qval;
@@ -74,9 +74,9 @@ class SoCKalman
      *
      * @param batteryVoltage
      *
-     * @return uint32_t soc
+     * @return float soc
      */
-    uint32_t calculateInitialSoC(uint32_t batteryVoltage);
+    float calculateInitialSoC(float batteryVoltage);
 
     /**
      * @brief project the state of charge ahead one step using a Coulomb counting model
@@ -110,6 +110,6 @@ class SoCKalman
 
     uint8_t inverse(float* a, float* result);
 
-    uint32_t clamp(uint32_t value, uint32_t min, uint32_t max);
+    float clamp(float value, float min, float max);
 
 };
