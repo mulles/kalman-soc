@@ -153,7 +153,7 @@ def main():
   # else: 
   #   structDataFrameVictoriaMQuery(device,queryStart,queryStop)
 
-  runCppBacktest()
+  #runCppBacktest()
   visualiseProcessedSensorData(device, queryStart,queryStop)
 
 if __name__ == "__main__":

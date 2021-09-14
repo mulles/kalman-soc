@@ -1,5 +1,7 @@
 #include "SoCKalman.h"
 #include <stdio.h>
+#define DEBUG 0 // 1 to debug
+
 
 SoCKalman::SoCKalman() :
     _previousSoC(0),
@@ -41,35 +43,40 @@ float SoCKalman::efficiency()
 void SoCKalman::f(bool isBatteryInFloat, float batteryMilliAmps, float samplePeriodMilliSec, float batteryCapacity)
 {
     float milliSecToHours = 3600000;
+    float chargeChange = (batteryMilliAmps / 1000) * _batteryEff/100000 * (samplePeriodMilliSec / milliSecToHours);
+    //int32_t powerChange = ((batteryMilliWatts / 1000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours));   // scaling should be fine here
+    float newSoC = (_x[0] * batteryCapacity + chargeChange *1000) / batteryCapacity;                                   // scaling should be fine here
+    _x[0] = newSoC;
+    #if DEBUG
     printf("Inside function f: \n");
     printf(" Current in A : %f\n",(batteryMilliAmps / 1000));
     printf(" samplePeriod in min: %f\n",samplePeriodMilliSec/milliSecToHours);
     printf(" _batteryEff: %f\n",_batteryEff);
     printf(" chargeChange=  %f  * %f * %f\n",batteryMilliAmps/1000, _batteryEff/100000,samplePeriodMilliSec/milliSecToHours);
-    float chargeChange = (batteryMilliAmps / 1000) * _batteryEff/100000 * (samplePeriodMilliSec / milliSecToHours);
     printf(" chargeChange in mAh: %f\n",chargeChange*1000);
     printf(" Previous SoC: %f \n",_x[0]/100000);
-    //int32_t powerChange = ((batteryMilliWatts / 1000) * _batteryEff * (samplePeriodMilliSec / milliSecToHours));   // scaling should be fine here
     printf(" newSoC = ( %f  + %f ) / %f  \n",_x[0] * batteryCapacity, chargeChange *1000 ,batteryCapacity);
-    float newSoC = (_x[0] * batteryCapacity + chargeChange *1000) / batteryCapacity;                                   // scaling should be fine here
-    _x[0] = newSoC;
     printf(" New SoC: %f\n",_x[0]/100000);
+    #endif
 
     if (isBatteryInFloat) {
         _millisecondsInFloat += samplePeriodMilliSec;
         if (_millisecondsInFloat > _floatResetDuration) {
              
             _batteryEff = (float)_batteryEff * (float)SOC_SCALED_HUNDRED_PERCENT / _previousSoC;
-            printf(" _batteryEff: %d\n",_batteryEff);
             _batteryEff = clamp(_batteryEff, 0, SOC_SCALED_HUNDRED_PERCENT);
-
             _x[0] = SOC_SCALED_HUNDRED_PERCENT;
+            #if DEBUG
+            printf(" _batteryEff: %d\n",_batteryEff);
             printf(" SoC %f cause InFloat for 10min\n",_x[0]/100000);
+            #endif
         }
     } else {
         _millisecondsInFloat = 0;
     }
+    #if DEBUG
     printf("\n");
+    #endif
 }
 
 void SoCKalman::h(float batteryMilliAmps)
@@ -91,28 +98,38 @@ void SoCKalman::h(float batteryMilliAmps)
     } else {
         multiplier = 2;
     }
+    #if DEBUG
     printf("Inside h function: \n");
     printf(" batteryMilliAmps in mA: %f\n",batteryMilliAmps);
-
+    #endif 
     for (i = 0; i < 101; i++) {
         
         if (dummyOcvSoc[i] > (float)_x[0]) {
             if (_isBatteryLithium) {
                 _h = (dummyLithiumVoltage[i] + dummyLithiumVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;   // units should be good here
+                #if DEBUG
                 printf(" predicted LiBat-voltage _h: %f\n",_h);
+                #endif
                 _H[0] = (dummyLithiumVoltage[i] - dummyLithiumVoltage[i - 1]) * multiplier * 100 / (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);              // units are good here
             } else {
+                #if DEBUG
                 printf(" _h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) / 2 + (batteryMilliAmps * _x[1] / 100) + _x[2] / 100\n");
                 printf(" _h = (%d) + (%f * %f / 100) + %f / 100\n",(dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1])/2, batteryMilliAmps/1000, _x[1], _x[2]);
+                #endif
                 _h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;
+                #if DEBUG
                 printf(" predicted LeadBatVoltage _h: %f\n",_h);
+                #endif DEBUG
                 _H[0] = (dummyLeadAcidVoltage[i] - dummyLeadAcidVoltage[i - 1]) * multiplier * 100 / (dummyOcvSoc[i] - dummyOcvSoc[i - 1]);
+                #if DEBUG
                 printf("( _H[0] = (%f - %f) * %f * 100 / (%f - %f)\n",dummyLeadAcidVoltage[i],dummyLeadAcidVoltage[i - 1], multiplier,dummyOcvSoc[i], dummyOcvSoc[i - 1]);
-                
+                #endif
             }
             _H[1] = batteryMilliAmps / 1000;   // should be good in Amps
-            _H[2] = 1;                         // offset
+            _H[2] = 1; 
+            #if DEBUG                        // offset
             printf(" _H=[ocv gradient, measured current, 1] = [%f,%f,%f] \n",_H[0],_H[1],_H[2]);
+            #endif
             return;
         }
     }
@@ -150,8 +167,10 @@ void SoCKalman::sample(bool isBatteryInFloat, float batteryMilliAmps, float batt
 
     // $\hat{x}_k = \hat{x_k} + G_k(z_k - h(\hat{x}_k))$
     temp5 = batteryVoltage - _h;
+    #if DEBUG
     printf(" batteryVoltage in mV: %d\n",batteryVoltage);
     printf(" batteryVoltage - _h: %f\n\n",temp5);
+    #endif
     matMultConst(_G, temp5, temp3, _n * _m);
     updateState(temp3, _n * _m);
     _x[0] = clamp((float)_x[0], 0, SOC_SCALED_HUNDRED_PERCENT);
