@@ -10,7 +10,7 @@ Fork of Okra's lightweight embedded state of charge (SoC) algorithm based on ext
      sudo apt install meson ninja-build build-essential clang-format cmake  
    
    #Git clone this repository with `--recursive` option:  
-     git clone --recursive git@github.com:mulles/kalman-soc.git  
+     git clone --recursive https://github.com/mulles/kalman-soc.git  
      #or run `git submodule update --init --recursive` after normal clone.
 
    #Setup build directory  
