@@ -47,25 +47,25 @@ class SoCKalman
   private:
     float _previousSoC;
     float _batteryEff;
-    float _pval;
-    float _qval;
-    float _rval;
-    float _pPre[9];
-    float _pPost[9];
-    float _q[9];
-    float _a[9];
-    float _at[9];
-    float _h;
-    float _H[3];
-    float _Ht[3];
-    float _G[3];
+    float _pval;      // P matrix init value (identity matrix)
+    float _qval;      // Q matrix init value (identity matrix)
+    float _rval;      // measurement error covariance scalar
+    float _pPre[9];  // P, pre-update
+    float _pPost[9]; // P, post-prediction
+    float _q[9];     // process noise covariance 
+    float _F[9];     // Jacobian of process model   
+    float _Ft[9];    // transpose of process Jacobian
+    float _h;      // output of user defined h() measurement function
+    float _H[3];   // Jacobian of measurement model
+    float _Ht[3];  // transpose of measurement Jacobian
+    float _G[3];   // Kalman gain; aka K
     bool _isBattery12V;
     bool _isBatteryLithium;
     uint32_t _millisecondsInFloat = 0;
     uint32_t _floatResetDuration = 600000;  // 10 minutes in milliseconds
-    float _x[3] = { 0, 0, 0 };
-    uint8_t _n = 3;
-    uint8_t _m = 1;
+    float _x[3] = { 0, 0, 0 }; // state vector   with _x[0]=f() output of user defined state-transition function
+    uint8_t _m = 1;  // number of state values 
+    uint8_t _n = 3;  // number of observables 
     const uint32_t SOC_SCALED_HUNDRED_PERCENT = 100000;  // 100% charge = 100000
     const uint32_t SOC_SCALED_MAX = 2 * SOC_SCALED_HUNDRED_PERCENT;  // allow soc to track up higher than 100% to gauge efficiency
 
