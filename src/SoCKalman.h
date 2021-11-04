@@ -47,12 +47,12 @@ class SoCKalman
   private:
     float _previousSoC;
     float _batteryEff;
-    float _pval;      // P matrix init value (identity matrix)
-    float _qval;      // Q matrix init value (identity matrix)
-    float _rval;      // measurement error covariance scalar
-    float _pPre[9];  // P, pre-update
-    float _pPost[9]; // P, post-prediction
-    float _q[9];     // process noise covariance 
+    float _Pval;      // P matrix init value (identity matrix)
+    float _Qval;      // Q matrix init value (identity matrix)
+    float _Rval;      // measurement error covariance scalar
+    float _Ppre[9];  // P, pre-update
+    float _Ppost[9]; // P, post-prediction
+    float _Q[9];     // process noise covariance 
     float _F[9];     // Jacobian of process model   
     float _Ft[9];    // transpose of process Jacobian
     float _h;      // output of user defined h() measurement function

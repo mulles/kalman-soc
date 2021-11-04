@@ -6,9 +6,9 @@
 SoCKalman::SoCKalman() :
     _previousSoC(0),
     _batteryEff(0),
-    _pval(0.1),
-    _qval(0.0001),
-    _rval(0.1)
+    _Pval(0.1),
+    _Qval(0.0001),
+    _Rval(0.1)
 
 {}
 
@@ -24,8 +24,8 @@ void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, float batteryEff,
         : calculateInitialSoC(batteryVoltage);
 
     _x[0] = _previousSoC;
-    diagonalMatrix(_pval, _pPost);   // identity(n) * pval
-    diagonalMatrix(_qval, _q);       // identity(n) * qval
+    diagonalMatrix(_Pval, _Ppost);   // identity(n) * pval
+    diagonalMatrix(_Qval, _Q);       // identity(n) * qval
     diagonalMatrix(1.0, _F);         // identity
 }
 
@@ -149,20 +149,20 @@ void SoCKalman::sample(bool isBatteryInFloat, float batteryMilliAmps, float batt
     f(isBatteryInFloat, batteryMilliAmps, samplePeriodMilliSec, batteryCapacity);
 
     // $P_k = A_{k-1} P_{k-1} A^T_{k-1} + Q_{k-1}$ -- updates _pPre
-    matMult(_F, _pPost, temp0, _n, _n, _n);
+    matMult(_F, _Ppost, temp0, _n, _n, _n);
     transpose(_F, _Ft, _n, _n);
     matMult(temp0, _Ft, temp1, _n, _n, _n);
-    matAdd(temp1, _q, _pPre, _n * _n);
+    matAdd(temp1, _Q, _Ppre, _n * _n);
 
     // update measurable (voltage) based on predicted state (SOC)
     h(batteryMilliAmps);
 
     // $G_k = P_k H^T_k (H_k P_k H^T_k + R)^{-1}$
     transpose(_H, _Ht, _m, _n);
-    matMult(_pPre, _Ht, temp2, _n, _n, _m);
-    matMult(_H, _pPre, temp3, _m, _n, _n);
+    matMult(_Ppre, _Ht, temp2, _n, _n, _m);
+    matMult(_H, _Ppre, temp3, _m, _n, _n);
     matMult(temp3, _Ht, temp4, _m, _n, _m);
-    temp5 = 1 / (temp4[0] + _rval);
+    temp5 = 1 / (temp4[0] + _Rval);
     matMultConst(temp2, temp5, _G, _n * _m);
 
     // $\hat{x}_k = \hat{x_k} + G_k(z_k - h(\hat{x}_k))$
