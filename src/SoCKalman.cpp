@@ -180,7 +180,7 @@ void SoCKalman::sample(bool isBatteryInFloat, float batteryMilliAmps, float batt
     negate(temp0, _n * _n);
     diagonalMatrix(1.0, temp1);
     matAccum(temp0, temp1, _n * _n);
-    matMult(temp0, _pPre, _pPost, _n, _n, _n);
+    matMult(temp0, _Ppre, _Ppost, _n, _n, _n);
 
     _previousSoC = _x[0];
 }
