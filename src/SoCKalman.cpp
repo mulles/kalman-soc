@@ -26,7 +26,7 @@ void SoCKalman::init(bool isBattery12V, bool isBatteryLithium, float batteryEff,
     _x[0] = _previousSoC;
     diagonalMatrix(_pval, _pPost);   // identity(n) * pval
     diagonalMatrix(_qval, _q);       // identity(n) * qval
-    diagonalMatrix(1.0, _a);         // identity
+    diagonalMatrix(1.0, _F);         // identity
 }
 
 float SoCKalman::read()
@@ -149,9 +149,9 @@ void SoCKalman::sample(bool isBatteryInFloat, float batteryMilliAmps, float batt
     f(isBatteryInFloat, batteryMilliAmps, samplePeriodMilliSec, batteryCapacity);
 
     // $P_k = A_{k-1} P_{k-1} A^T_{k-1} + Q_{k-1}$ -- updates _pPre
-    matMult(_a, _pPost, temp0, _n, _n, _n);
-    transpose(_a, _at, _n, _n);
-    matMult(temp0, _at, temp1, _n, _n, _n);
+    matMult(_F, _pPost, temp0, _n, _n, _n);
+    transpose(_F, _Ft, _n, _n);
+    matMult(temp0, _Ft, temp1, _n, _n, _n);
     matAdd(temp1, _q, _pPre, _n * _n);
 
     // update measurable (voltage) based on predicted state (SOC)
