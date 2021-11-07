@@ -48,3 +48,4 @@ The output file would be `processed_sensor_data.csv`.
 ## Visualisation of backtest results:
 
 https://raw.githack.com/mulles/kalman-soc/main/data/EVLKpN_20210817-20210830_SOC_Graph.html
+https://raw.githack.com/mulles/kalman-soc/main/data/mppt-1210-hus_2021-05-28T20:10:00.000Z-2021-05-29T02:19:00.000Z_SOC_Graph.html
