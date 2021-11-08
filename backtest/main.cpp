@@ -115,12 +115,12 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
     
     float batteryEff = 85000;
     float initialSoC = 0xFFFFFFFF;
-    float batteryCapacityAh = 17; //default 1200Wh. now 12Ah*12V=144Wh, emblem 17Ah 
-    printf("Parameter set: \n BatteryEfficiency: %d\n",batteryEff);
-    printf(" IntialSoC: %d\n",initialSoC);
-    printf(" batteryCapacityAh: %d\n",batteryCapacityAh);
-    printf(" isBatteryLithium?: %d\n",isBatteryLithium);
-    printf(" isBattery12V?: %d\n\n",isBattery12V);
+    float batteryCapacityAh = 12; //default 1200Wh. now 12Ah*12V=144Wh, emblem 17Ah  
+    printf("Parameter set: \n BatteryEfficiency: %f\n",batteryEff);
+    printf(" IntialSoC: %f\n",initialSoC);
+    printf(" batteryCapacityAh: %f\n",batteryCapacityAh);
+    printf(" isBatteryLithium?: %f\n",isBatteryLithium);
+    printf(" isBattery12V?: %f\n\n",isBattery12V);
     
     // Create a vector of <string, int vector> pairs to store the result
     std::vector<std::pair<std::string, std::vector<int> > > result;
@@ -190,16 +190,16 @@ std::vector<std::pair<std::string, std::vector<int> > > process_csv(std::string 
         if (lineIdx == 0) {
             // use battery voltage to initialize kalman filter
             float batteryVoltage = result.at(3).second.back();
-            printf("Parameter the EKF is init: \n BatteryEfficiey: %d\n",batteryEff);
-            printf(" IntialSoC: %d\n",initialSoC);
-            printf(" batteryCapacityAh: %d\n",batteryCapacityAh);
-            printf(" isBatteryLithium?: %d\n",isBatteryLithium);
-            printf(" isBattery12V?: %d\n",isBattery12V);
-            printf(" BatteryVoltage in mV: %d\n\n",batteryVoltage);
+            printf("Parameter the EKF is init: \n BatteryEfficiey: %f\n",batteryEff);
+            printf(" IntialSoC: %f\n",initialSoC);
+            printf(" batteryCapacityAh: %f\n",batteryCapacityAh);
+            printf(" isBatteryLithium?: %f\n",isBatteryLithium);
+            printf(" isBattery12V?: %f\n",isBattery12V);
+            printf(" BatteryVoltage in mV: %f\n\n",batteryVoltage);
             kalman.init(isBattery12V, isBatteryLithium, batteryEff, batteryVoltage, initialSoC);
             float soc = kalman.read();
             printf("Effiency calcultated by EKF init %f\n\n",kalman.efficiency());
-            printf("The SoC Caculated by EKF init: %d\n\n",soc);
+            printf("The SoC Caculated by EKF init: %f\n\n",soc);
             result.at(colIdx).second.push_back(soc);
         } else {
             // use sensor data to do a sample with the kalman filter

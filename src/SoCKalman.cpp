@@ -1,6 +1,6 @@
 #include "SoCKalman.h"
 #include <stdio.h>
-#define DEBUG 0 // 1 to debug
+#define DEBUG 1 // 1 to debug
 
 
 SoCKalman::SoCKalman() :
@@ -114,7 +114,7 @@ void SoCKalman::h(float batteryMilliAmps)
             } else {
                 #if DEBUG
                 printf(" _h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) / 2 + (batteryMilliAmps * _x[1] / 100) + _x[2] / 100\n");
-                printf(" _h = (%d) + (%f * %f / 100) + %f / 100\n",(dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1])/2, batteryMilliAmps/1000, _x[1], _x[2]);
+                printf(" _h = (%f) + (%f * %f / 100) + %f / 100\n",(dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1])/2, batteryMilliAmps/1000, _x[1], _x[2]);
                 #endif
                 _h = (dummyLeadAcidVoltage[i] + dummyLeadAcidVoltage[i - 1]) * multiplier / 2 + (batteryMilliAmps / 1000 * _x[1] / 100) + _x[2] / 100;
                 #if DEBUG
@@ -150,7 +150,7 @@ void SoCKalman::sample(bool isBatteryInFloat, float batteryMilliAmps, float batt
     // $\hat{x}_k = f(\hat{x}_{k-1})$
     f(isBatteryInFloat, batteryMilliAmps, samplePeriodMilliSec, batteryCapacity);
 
-    // $P_k = A_{k-1} P_{k-1} A^T_{k-1} + Q_{k-1}$ -- updates _pPre
+    // $P_k = F_{k-1} P_{k-1} F^T_{k-1} + Q_{k-1}$ -- updates _pPre
     matMult(_F, _Ppost, temp0, _n, _n, _n);
     transpose(_F, _Ft, _n, _n);
     matMult(temp0, _Ft, temp1, _n, _n, _n);
@@ -170,7 +170,7 @@ void SoCKalman::sample(bool isBatteryInFloat, float batteryMilliAmps, float batt
     // $\hat{x}_k = \hat{x_k} + G_k(z_k - h(\hat{x}_k))$
     temp5 = batteryVoltage - _h;
     #if DEBUG
-    printf(" batteryVoltage in mV: %d\n",batteryVoltage);
+    printf(" batteryVoltage in mV: %f\n",batteryVoltage);
     printf(" batteryVoltage - _h: %f\n\n",temp5);
     #endif
     matMultConst(_G, temp5, temp3, _n * _m);
